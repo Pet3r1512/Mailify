@@ -1,17 +1,14 @@
 const router = require('express').Router()
-const { PrismaClient } = require('@prisma/client')
+const { addUser } = require('../database/query')
 
-const prisma = new PrismaClient()
-
-router.get('/', async (req, res, next) => {
-    const userData = req.body
-    console.log(userData)
-    return res.send(userData)
+router.get('/', (req, res, next) => {
+    return res.send('Get ok')
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const userData = req.body
-    return res.send(userData)
+    addUser(userData)
+    return res.send('Add database successfully')
 })
 
 router.get('/user/:id', async (req, res) => {

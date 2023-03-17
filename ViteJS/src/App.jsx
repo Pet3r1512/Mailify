@@ -8,17 +8,16 @@ export default function App() {
   }
 
   const handleSubmit = async (event) => {
-    console.log(userData)
+    event.preventDefault()
     const value = await fetch('http://localhost:8080/api', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(userData)
       }).then(function(response) {
-        console.log(response)
         return response.json();
       });
- 
-    event.preventDefault()
-    console.log(value);
   }
 
   return (
@@ -31,6 +30,10 @@ export default function App() {
       <label>
         Password
         <input name="password" onChange={handleChange} />
+      </label>
+      <label>
+        Email
+        <input name="email" onChange={handleChange} />
       </label>
       <br />
       <button onClick={handleSubmit}>Submit</button>

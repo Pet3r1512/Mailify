@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
 router.post('/', async (req, res) => {
     const userData = req.body
     addUser(userData)
-    return res.send('Add database successfully')
+    return res.send({success: true})
 })
 
 router.get('/user/:id', async (req, res) => {

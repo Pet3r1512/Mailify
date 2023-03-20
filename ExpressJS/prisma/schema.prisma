@@ -12,7 +12,11 @@ datasource db {
 
 model User {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullname    String
   username    String
+  password    String
   phonenumber String
   createdAt   DateTime @default(now())
+
+  @@unique([id, username, phonenumber])
 }

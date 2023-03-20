@@ -14,4 +14,14 @@ async function addUser(user) {
     })
 }
 
-module.exports = { addUser }
+async function findUser(user) {
+    const { username, password } = user
+    await prisma.user.findUnique({
+        where: {
+            username: username,
+            password: password
+        }
+    })    
+}
+
+module.exports = { addUser, findUser }

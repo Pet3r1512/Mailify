@@ -1,11 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from './pages/home';
-import Setting from './pages/setting';
-import RegisterPage from './pages/register';
+import { Register, SignIn, Setting } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -18,12 +16,16 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: <Register />,
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);

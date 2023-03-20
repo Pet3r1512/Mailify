@@ -1,8 +1,10 @@
 const router = require('express').Router()
-const { addUser } = require('../database/query')
+const { addUser, findUser } = require('../database/query')
 
-router.get('/', (req, res, next) => {
-    return res.send('Get ok')
+router.post('/signin', async (req, res) => {
+    const user = req.body
+    findUser(user)
+    return res.send({success: true})
 })
 
 router.post('/', async (req, res) => {

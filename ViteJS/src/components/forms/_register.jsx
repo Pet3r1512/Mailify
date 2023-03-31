@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ export default function Register() {
   } = useForm();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const navigate = useNavigate();
+  const [email, setEmail] = useState();
 
   const onSubmit = async (data) => {
     await sleep(200);
@@ -49,6 +50,10 @@ export default function Register() {
       <TextField
         required
         label="Username"
+        onChange={(e) => {
+          setEmail(e.originalTarget.value + "@mailify.com");
+          console.log(email);
+        }}
         placeholder="username@mailify.com"
         {...register("username")}
       />

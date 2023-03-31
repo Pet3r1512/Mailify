@@ -13,16 +13,12 @@ router.post('/', async (req, res) => {
     return res.send({success: true})
 })
 
-router.get('/user/:id', async (req, res) => {
-    return res.send('API ok')
-})
-
-router.post('/users', (req, res) => {
-    return res.send('API ok')
-})
-
 router.delete('/user/:id', (req, res) => {
     return res.send('API ok')
+})
+
+router.put('/:id', async (req, res) => {
+    return res.send("API PUT ok")
 })
 
 router.patch('/user/:id', (req, res) => {

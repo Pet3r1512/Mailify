@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Input, TextField } from "@mui/material";
+import { TextField, Grid, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
@@ -33,26 +33,33 @@ export default function SignIn() {
   };
 
   return (
-    <form
-      className="flex flex-col gap-y-2 w-1/2"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <TextField
-        label="username"
-        required
-        placeholder="Username"
-        {...register("username")}
-      />
-      <TextField
-        label="Password"
-        required
-        type={"password"}
-        placeholder="Password"
-        {...register("password")}
-      />
-      <button className="btn btn-active btn-primary text-white">
-        <input type="submit" />
-      </button>
+    <form className="w-1/3" onSubmit={handleSubmit(onSubmit)}>
+      <Grid
+        container
+        rowGap={2}
+        direction="column"
+        justifyContent={"center"}
+        alignItems="center"
+      >
+        <TextField
+          label="Username"
+          required
+          fullWidth
+          placeholder="Username"
+          {...register("username")}
+        />
+        <TextField
+          label="Password"
+          required
+          fullWidth
+          type={"password"}
+          placeholder="Password"
+          {...register("password")}
+        />
+        <Button variant="contained">
+          <input type="submit" />
+        </Button>
+      </Grid>
     </form>
   );
 }

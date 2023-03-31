@@ -1,6 +1,8 @@
 import React from "react";
 import Register from "../components/forms/_register";
 import { HeadBar, Tab } from "../components/index";
+import Typography from "@mui/material/Typography";
+import { Link } from "@mui/material";
 
 export default function RegisterPage() {
   return (
@@ -10,6 +12,19 @@ export default function RegisterPage() {
         Create New Account
       </h1>
       <Register />
+      <Typography
+        variant="body1"
+        color="common.black"
+        style={{
+          fontWeight: 600,
+          marginTop: "24px",
+        }}
+      >
+        Already have an account?{" "}
+        <Link href="/signin" underline="always" color="primary">
+          Sign In
+        </Link>
+      </Typography>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
@@ -12,7 +12,7 @@ export default function Register() {
   } = useForm();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const navigate = useNavigate();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState("");
 
   const onSubmit = async (data) => {
     await sleep(200);
@@ -38,11 +38,16 @@ export default function Register() {
       className="flex flex-col gap-y-4 w-[600px] mx-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <TextField label="Full Name" required {...register("fullname")} />
       <TextField
-        id="outlined-search"
+        label="Full Name"
+        color="inputColor"
+        required
+        {...register("fullname")}
+      />
+      <TextField
         label="Phone Number"
         required
+        color="inputColor"
         type="tel"
         pattern="0[0-9]{9}"
         {...register("phonenumber")}
@@ -50,16 +55,21 @@ export default function Register() {
       <TextField
         required
         label="Username"
-        onChange={(e) => {
-          setEmail(e.originalTarget.value + "@mailify.com");
-          console.log(email);
-        }}
+        color="inputColor"
         placeholder="username@mailify.com"
+        value={email}
+        // onChange={(e) => {
+        //   setEmail(e.target.value);
+        // }}
         {...register("username")}
       />
+      {email && (
+        <Typography variant="primary">{`Your email address is: ${email}@mailify.com`}</Typography>
+      )}
       <TextField
         required
         label="Password"
+        color="inputColor"
         type="password"
         {...register("password")}
       />

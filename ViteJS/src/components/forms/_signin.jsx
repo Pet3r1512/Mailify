@@ -34,8 +34,6 @@ export default function SignIn() {
       });
   };
 
-  const theme = useTheme();
-
   return (
     <form className="w-1/3" onSubmit={handleSubmit(onSubmit)}>
       <Grid
@@ -49,6 +47,7 @@ export default function SignIn() {
           label="Username"
           required
           fullWidth
+          color="inputColor"
           placeholder="Username"
           {...register("username")}
         />
@@ -56,6 +55,7 @@ export default function SignIn() {
           label="Password"
           required
           fullWidth
+          color="inputColor"
           type={"password"}
           placeholder="Password"
           {...register("password")}

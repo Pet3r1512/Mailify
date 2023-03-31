@@ -1,7 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { TextField, Grid, Button } from "@mui/material";
+import { Input } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+import { Grid, TextField, Button } from "@mui/material";
 
 export default function SignIn() {
   const {
@@ -15,7 +17,7 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     await sleep(200);
-    await fetch("http://localhost:8080/api/signin", {
+    await fetch("http://localhost:8080/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,6 +33,8 @@ export default function SignIn() {
         }
       });
   };
+
+  const theme = useTheme();
 
   return (
     <form className="w-1/3" onSubmit={handleSubmit(onSubmit)}>
@@ -56,8 +60,8 @@ export default function SignIn() {
           placeholder="Password"
           {...register("password")}
         />
-        <Button variant="contained">
-          <input type="submit" />
+        <Button variant="contained" color="primary" size="medium">
+          <input className="text-[16px] font-semibold" type="submit" />
         </Button>
       </Grid>
     </form>

@@ -16,7 +16,7 @@ async function addUser(user) {
 
 async function findUser(user) {
     const { username, password } = user
-    await prisma.user.findUnique({
+    await prisma.user.findFirst({
         where: {
             username: username,
             password: password

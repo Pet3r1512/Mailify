@@ -40,12 +40,12 @@ function Hero() {
 
 export default function Home() {
   return (
-    <>
+    <div className="bg-white">
       <Tab name="Home" />
       <div className="max-w-[1750px] mx-auto flex flex-col h-screen">
         <HeadBar />
         <Hero />
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-export { default as SignIn } from "./signin";
-export { default as Register } from "./register";
-export { default as Home } from "./home";
-export { default as Setting } from "./setting";
+export { default as SignInPage } from "./Signin";
+export { default as RegisterPage } from "./Register";
+export { default as Home } from "./Home";
+export { default as Setting } from "./Setting";

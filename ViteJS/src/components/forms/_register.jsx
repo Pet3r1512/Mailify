@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
-  TextField,
   InputAdornment,
   FormControl,
   OutlinedInput,
   IconButton,
   InputLabel,
+  CircularProgress,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -20,9 +22,9 @@ export default function Register() {
   } = useForm();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     await sleep(200);
     await fetch("http://localhost:8080/api", {
       method: "POST",
@@ -36,10 +38,13 @@ export default function Register() {
       })
       .then((res) => {
         if (res.success === true) {
+          setIsLoading(false);
           return navigate("/");
         }
       });
   };
+
+  if (isLoading) return <CircularProgress />;
 
   return (
     <form
@@ -111,6 +116,7 @@ export default function Register() {
             </InputAdornment>
           }
           label="Password"
+          {...register("password")}
         />
       </FormControl>
       <button className="btn btn-active btn-primary text-white">

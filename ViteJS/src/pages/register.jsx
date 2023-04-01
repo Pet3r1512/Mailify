@@ -1,8 +1,7 @@
 import React from "react";
 import Register from "../components/forms/_register";
 import { HeadBar, Tab } from "../components/index";
-import Typography from "@mui/material/Typography";
-import { Link } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 
 export default function RegisterPage() {
   return (

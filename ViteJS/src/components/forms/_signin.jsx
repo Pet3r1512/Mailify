@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Grid, TextField, Button } from "@mui/material";
+import {
+  TextField,
+  InputAdornment,
+  FormControl,
+  OutlinedInput,
+  IconButton,
+  InputLabel,
+} from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 export default function SignIn() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -16,7 +25,7 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     await sleep(200);
-    await fetch("http://localhost:8080/api", {
+    await fetch("http://localhost:8080/api/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,41 +37,60 @@ export default function SignIn() {
       })
       .then((res) => {
         if (res.success === true) {
-          return navigate("/testLogin");
+          return navigate("/");
         }
       });
   };
 
   return (
-    <form className="w-1/3" onSubmit={handleSubmit(onSubmit)}>
-      <Grid
-        container
-        rowGap={2}
-        direction="column"
-        justifyContent={"center"}
-        alignItems="center"
-      >
-        <TextField
-          label="Username"
-          required
+    <form
+      className="flex flex-col gap-y-4 w-[600px] mx-auto"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {/* Username - Email Address */}
+      <FormControl variant="outlined">
+        <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
+          Username
+        </InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
           fullWidth
           color="inputColor"
-          placeholder="Username"
+          type="text"
+          endAdornment={
+            <InputAdornment position="start">@mailify.com</InputAdornment>
+          }
+          label="Username"
           {...register("username")}
         />
-        <TextField
-          label="Password"
-          required
+      </FormControl>
+      {/* Password */}
+      <FormControl variant="outlined" color="inputColor">
+        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type={showPassword ? "text" : "password"}
           fullWidth
-          color="inputColor"
-          type={"password"}
-          placeholder="Password"
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => {
+                  setShowPassword(!showPassword);
+                }}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
           {...register("password")}
         />
-        <Button variant="contained" color="primary" size="medium">
-          <input className="text-[16px] font-semibold" type="submit" />
-        </Button>
-      </Grid>
+      </FormControl>
+      <button className="btn btn-active btn-primary text-white">
+        <input type="submit" />
+      </button>
     </form>
   );
 }

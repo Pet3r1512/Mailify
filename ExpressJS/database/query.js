@@ -1,5 +1,16 @@
 const { PrismaClient } = require('@prisma/client')
+const bcrypt = require('bcrypt')
 const prisma = new PrismaClient()
+
+const saltRounds = 10
+
+function encryptingPassword(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(saltRounds))
+}
+
+function decryptingPassword(hash) {
+    return bcrypt.compareSync(password, hash)
+}
 
 async function addUser(user) {
     const { fullname, phonenumber, username, password } = user
@@ -9,9 +20,10 @@ async function addUser(user) {
             fullname: fullname,
             username: username,
             phonenumber: phonenumber,
-            password: password,
+            password: encryptingPassword(password)
         }
     })
+
 }
 
 async function findUser(user) {
@@ -19,7 +31,7 @@ async function findUser(user) {
     await prisma.user.findFirst({
         where: {
             username: username,
-            password: password
+            password: decryptingPassword(encryptingPassword(password))
         }
     })    
 }

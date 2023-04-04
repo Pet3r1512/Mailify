@@ -8,6 +8,7 @@ import {
   OutlinedInput,
   IconButton,
   InputLabel,
+  Typography,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 
@@ -44,7 +45,7 @@ export default function SignIn() {
 
   return (
     <form
-      className="flex flex-col gap-y-4 w-[600px] mx-auto"
+      className="flex flex-col gap-y-4 sm:w-[600px] mx-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Username - Email Address */}
@@ -53,8 +54,9 @@ export default function SignIn() {
           Username
         </InputLabel>
         <OutlinedInput
-          id="outlined-adornment-password"
           fullWidth
+          required
+          id="username"
           color="inputColor"
           type="text"
           endAdornment={

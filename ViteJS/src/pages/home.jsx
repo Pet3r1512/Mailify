@@ -32,7 +32,7 @@ function Hero() {
             </button>
           </a>
         </div>
-        <img className="mr-0" srcSet="/images/hero.png 3x" alt="" />
+        <img className="mr-0 sm:w-[60%]" srcSet="/images/hero.png 3x" alt="" />
       </div>
     </div>
   );

@@ -9,8 +9,7 @@ router.post('/signin', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const userData = req.body
-    addUser(userData)
-    return res.send({success: true})
+    return res.send(addUser(userData))
 })
 
 router.delete('/user/:id', (req, res) => {

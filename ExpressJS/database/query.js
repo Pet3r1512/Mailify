@@ -15,25 +15,36 @@ function decryptingPassword(hash) {
 async function addUser(user) {
     const { fullname, phonenumber, username, password } = user
 
-    await prisma.user.create({
-        data: {
-            fullname: fullname,
+    const userExists = prisma.user.count({
+        where: {
             username: username,
-            phonenumber: phonenumber,
-            password: encryptingPassword(password)
+            phonenumber: phonenumber
         }
     })
 
+    if(userExists) return {message: false}
+
+    else {
+        await prisma.user.create({
+            data: {
+                fullname: fullname,
+                username: username,
+                phonenumber: phonenumber,
+                password: encryptingPassword(password)
+            }
+        })
+        return {message: true}
+    }
 }
 
 async function findUser(user) {
     const { username, password } = user
-    await prisma.user.findFirst({
+    const currentUser = await prisma.user.findFirst({
         where: {
             username: username,
-            password: decryptingPassword(encryptingPassword(password))
         }
     })    
+    if(encryptingPassword(password) === currentUser.password) return {message: true}
 }
 
 module.exports = { addUser, findUser }

@@ -8,6 +8,7 @@ import {
   InputLabel,
   CircularProgress,
   Alert,
+  FormHelperText,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,16 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setIsSubmit] = useState("");
+  const [isFailed, setIsFailed] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
 
   const {
     register,
@@ -39,10 +50,16 @@ export default function Register() {
         return res.json();
       })
       .then((res) => {
+        console.log(res);
         if (res.success === true) {
           setIsSubmit("success");
-          sleep(400);
-          return navigate("/");
+          sleep(1000);
+          navigate("/");
+        } else {
+          setIsFailed(true);
+          setTimeout(() => {
+            setIsFailed(false);
+          }, 1200);
         }
       });
   };
@@ -50,7 +67,7 @@ export default function Register() {
   return (
     <>
       <form
-        className="flex flex-col gap-y-4 w-[600px] mx-auto"
+        className="flex flex-col gap-y-4 sm:w-[600px] mx-auto"
         onSubmit={handleSubmit(onSubmit)}
       >
         {/* Full Name */}
@@ -59,7 +76,7 @@ export default function Register() {
             Full Name
           </InputLabel>
           <OutlinedInput
-            id="outlined-adornment-password"
+            name="fullname"
             fullWidth
             required
             color="inputColor"
@@ -75,15 +92,22 @@ export default function Register() {
             Phone Number
           </InputLabel>
           <OutlinedInput
-            id="outlined-adornment-password"
+            name="phonenumber"
             fullWidth
             required
             color="inputColor"
             type="tel"
-            pattern="0[0-9]{9}"
+            error={errors.phonenumber}
             label="Phone Number"
-            {...register("phonenumber")}
+            {...register("phonenumber", {
+              pattern: /0[0-9]{9}/,
+            })}
           />
+          {errors.phonenumber && errors.phonenumber.type === "pattern" && (
+            <FormHelperText error>
+              Your phone number must start with 0 and contains 10 digits
+            </FormHelperText>
+          )}
         </FormControl>
         {/* Username - Email Address */}
         <FormControl variant="outlined">
@@ -91,16 +115,28 @@ export default function Register() {
             Username
           </InputLabel>
           <OutlinedInput
-            id="outlined-adornment-password"
+            name="username"
             fullWidth
             required
+            error={errors.username}
             color="inputColor"
             endAdornment={
               <InputAdornment position="start">@mailify.com</InputAdornment>
             }
             label="Username"
-            {...register("username")}
+            {...register("username", {
+              maxLength: 30,
+              pattern: /^[a-zA-Z0-9.]*$/,
+            })}
           />
+          {errors.username && errors.username.type === "maxLength" && (
+            <FormHelperText error>Your username is too long!</FormHelperText>
+          )}
+          {errors.username && errors.username.type === "pattern" && (
+            <FormHelperText error>
+              Your username contains invalid characters!
+            </FormHelperText>
+          )}
         </FormControl>
         {/* Password */}
         <FormControl variant="outlined" color="inputColor">
@@ -108,10 +144,12 @@ export default function Register() {
             Password
           </InputLabel>
           <OutlinedInput
-            id="outlined-adornment-password"
+            name="password"
             type={showPassword ? "text" : "password"}
             fullWidth
             required
+            error={errors.password}
+            onKeyUp={checkCapsLock}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -126,23 +164,33 @@ export default function Register() {
               </InputAdornment>
             }
             label="Password"
-            {...register("password")}
+            {...register("password", {
+              minLength: 8,
+            })}
           />
+          {errors.password && errors.password.type === "minLength" && (
+            <FormHelperText error>
+              Password must have at least 8 characters
+            </FormHelperText>
+          )}
+          {isCapsLockOn && (
+            <FormHelperText error>Warning: CapsLock is on!</FormHelperText>
+          )}
         </FormControl>
         <button className="btn btn-active btn-primary text-white">
           <input type="submit" />
         </button>
       </form>
-      {isSubmit && (
+      {isFailed && (
         <Alert
           style={{
             position: "absolute",
             bottom: "5px",
             left: "5px",
           }}
-          severity="success"
+          severity="error"
         >
-          Create new account successfully!!!
+          Username or phone number is existed!
         </Alert>
       )}
     </>

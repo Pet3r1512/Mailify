@@ -21,7 +21,8 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.7",
     "react-router-dom": "^6.9.0",
-    "react-select": "^5.7.0"
+    "react-select": "^5.7.0",
+    "vite-plugin-favicon": "^1.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

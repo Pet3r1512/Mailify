@@ -23,7 +23,7 @@ export default function SignInPage() {
   return (
     <>
       <Tab name="Sign In" />
-      <div className="bg-white flex flex-col md:h-screen justify-center items-center">
+      <div className="bg-white flex flex-col min-h-screen md:h-screen justify-center items-center">
         <h1 className="text-4xl text-primary font-bold mb-8">Sign In</h1>
         <SignIn />
         <Typography

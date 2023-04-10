@@ -6,16 +6,20 @@ import {
   OutlinedInput,
   IconButton,
   InputLabel,
-  CircularProgress,
   Alert,
   FormHelperText,
+  Typography,
+  Input,
+  Button,
+  CircularProgress,
 } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { VisibilityOff, Visibility, SendSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setIsSubmit] = useState("");
+  const [errorName, setErrorname] = useState("");
   const [isFailed, setIsFailed] = useState(false);
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
@@ -38,7 +42,7 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     await sleep(200);
-    setIsSubmit("on");
+    setIsSubmit(true);
     await fetch("http://localhost:8080/api", {
       method: "POST",
       headers: {
@@ -50,16 +54,16 @@ export default function Register() {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         if (res.success === true) {
-          setIsSubmit("success");
-          sleep(1000);
+          console.log("true");
+          setIsSubmit(false);
           navigate("/");
         } else {
           setIsFailed(true);
           setTimeout(() => {
             setIsFailed(false);
-          }, 1200);
+          }, 3000);
+          setErrorname(res.message);
         }
       });
   };
@@ -72,19 +76,26 @@ export default function Register() {
       >
         {/* Full Name */}
         <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
+          <InputLabel
+            htmlFor="outlined-adornment-password"
+            color={errors.fullname ? "error" : "inputColor"}
+          >
             Full Name
           </InputLabel>
           <OutlinedInput
             name="fullname"
             fullWidth
             required
-            color="inputColor"
+            error={!!errors.fullname}
+            color={errors.fullname ? "error" : "inputColor"}
             label="Full Name"
             {...register("fullname", {
-              pattern: /[A-Za-z]{3}/,
+              pattern: /^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/gm,
             })}
           />
+          {errors.fullname && errors.fullname.type === "pattern" && (
+            <FormHelperText error>Invalid characters</FormHelperText>
+          )}
         </FormControl>
         {/* Phone Number */}
         <FormControl variant="outlined">
@@ -97,7 +108,7 @@ export default function Register() {
             required
             color="inputColor"
             type="tel"
-            error={errors.phonenumber}
+            error={!!errors.phonenumber}
             label="Phone Number"
             {...register("phonenumber", {
               pattern: /0[0-9]{9}/,
@@ -108,18 +119,26 @@ export default function Register() {
               Your phone number must start with 0 and contains 10 digits
             </FormHelperText>
           )}
+          {isFailed && errorName === "Phone number is existed!" && (
+            <FormHelperText error>
+              Phone number is already existed!
+            </FormHelperText>
+          )}
         </FormControl>
         {/* Username - Email Address */}
         <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
+          <InputLabel
+            htmlFor="outlined-adornment-password"
+            color={isFailed ? "error" : "inputColor"}
+          >
             Username
           </InputLabel>
           <OutlinedInput
             name="username"
             fullWidth
             required
-            error={errors.username}
-            color="inputColor"
+            error={!!errors.username}
+            color={isFailed ? `error` : "inputColor"}
             endAdornment={
               <InputAdornment position="start">@mailify.com</InputAdornment>
             }
@@ -137,9 +156,15 @@ export default function Register() {
               Your username contains invalid characters!
             </FormHelperText>
           )}
+          {isFailed && errorName === "Username is existed!" && (
+            <FormHelperText error>Username is already existed!</FormHelperText>
+          )}
         </FormControl>
         {/* Password */}
-        <FormControl variant="outlined" color="inputColor">
+        <FormControl
+          variant="outlined"
+          color={errors.password ? "error" : "inputColor"}
+        >
           <InputLabel htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
@@ -148,7 +173,7 @@ export default function Register() {
             type={showPassword ? "text" : "password"}
             fullWidth
             required
-            error={errors.password}
+            error={!!errors.password}
             onKeyUp={checkCapsLock}
             endAdornment={
               <InputAdornment position="end">
@@ -174,25 +199,37 @@ export default function Register() {
             </FormHelperText>
           )}
           {isCapsLockOn && (
-            <FormHelperText error>Warning: CapsLock is on!</FormHelperText>
+            <FormHelperText error>
+              <Typography color="warning">CapsLock is on!</Typography>
+            </FormHelperText>
           )}
         </FormControl>
-        <button className="btn btn-active btn-primary text-white">
-          <input type="submit" />
-        </button>
-      </form>
-      {isFailed && (
-        <Alert
-          style={{
-            position: "absolute",
-            bottom: "5px",
-            left: "5px",
-          }}
-          severity="error"
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={isSubmit ? <></> : <SendSharp />}
         >
-          Username or phone number is existed!
-        </Alert>
-      )}
+          <Input
+            type="submit"
+            disableUnderline={true}
+            style={{
+              color: "#fff",
+              fontWeight: "600",
+            }}
+          />
+          {isSubmit ? (
+            <CircularProgress
+              size={20}
+              style={{
+                color: "#fff",
+                marginLeft: "5px",
+              }}
+            />
+          ) : (
+            <></>
+          )}
+        </Button>
+      </form>
     </>
   );
 }

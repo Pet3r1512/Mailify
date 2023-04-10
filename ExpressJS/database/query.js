@@ -15,14 +15,21 @@ function decryptingPassword(hash) {
 async function addUser(user) {
     const { fullname, phonenumber, username, password } = user
 
-    const userExists = prisma.user.count({
+    const usernameExists = await prisma.user.count({
         where: {
             username: username,
-            phonenumber: phonenumber
         }
     })
 
-    if(userExists) return {message: false}
+    const phonenumberExists = await prisma.user.count({
+        where: {
+            phonenumber: phonenumber,
+        }
+    })
+
+    if(usernameExists > 0) return {message: "Username is existed!"}
+
+    if(phonenumberExists > 0) return {message: "Phone number is existed!"}
 
     else {
         await prisma.user.create({

@@ -13,7 +13,13 @@ function decryptingPassword(hash) {
 }
 
 async function addUser(user) {
-    const { fullname, phonenumber, username, password } = user
+    const { fullname, phonenumber, username, password, confirm_password } = user
+
+    const phonenumberExists = await prisma.user.count({
+        where: {
+            phonenumber: phonenumber,
+        }
+    })
 
     const usernameExists = await prisma.user.count({
         where: {
@@ -21,11 +27,10 @@ async function addUser(user) {
         }
     })
 
-    const phonenumberExists = await prisma.user.count({
-        where: {
-            phonenumber: phonenumber,
-        }
-    })
+    if(password !== confirm_password) {
+        console.log("1")
+        return {message: "Confirm password does not match!"}
+    }
 
     if(usernameExists > 0) return {message: "Username is existed!"}
 

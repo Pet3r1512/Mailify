@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     if(result.message === true) {
         return res.status(200).send({success: true})
     }
-    return res.send({success: false})
+    return res.send({success: false, message: result.message})
 })
 
 router.post('/checkUsername', async(req, res) => {

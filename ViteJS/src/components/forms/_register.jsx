@@ -6,7 +6,6 @@ import {
   OutlinedInput,
   IconButton,
   InputLabel,
-  Alert,
   FormHelperText,
   Typography,
   Input,
@@ -22,12 +21,23 @@ export default function Register() {
   const [errorName, setErrorname] = useState("");
   const [isFailed, setIsFailed] = useState(false);
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+  const [isCapsLockOnConfirm, setIsCapsLockOnConfirm] = useState(false);
+
+  const navigate = useNavigate();
 
   const checkCapsLock = (event) => {
     if (event.getModifierState("CapsLock")) {
       setIsCapsLockOn(true);
     } else {
       setIsCapsLockOn(false);
+    }
+  };
+
+  const checkCapsLockConfirm = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOnConfirm(true);
+    } else {
+      setIsCapsLockOnConfirm(false);
     }
   };
 
@@ -38,9 +48,9 @@ export default function Register() {
     formState,
   } = useForm();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    console.log(data);
     await sleep(200);
     setIsSubmit(true);
     await fetch("http://localhost:8080/api", {
@@ -55,7 +65,6 @@ export default function Register() {
       })
       .then((res) => {
         if (res.success === true) {
-          console.log("true");
           setIsSubmit(false);
           navigate("/");
         } else {
@@ -204,6 +213,48 @@ export default function Register() {
             </FormHelperText>
           )}
         </FormControl>
+        {/* Confirm password */}
+        <FormControl
+          variant="outlined"
+          color={errors.confirm_password ? "error" : "inputColor"}
+        >
+          <InputLabel htmlFor="outlined-adornment-confirm-password">
+            Confirm Password
+          </InputLabel>
+          <OutlinedInput
+            name="confirm_password"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            required
+            error={!!errors.confirm_password}
+            onKeyUp={checkCapsLockConfirm}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Confirm password"
+            {...register("confirm_password")}
+          />
+          {isCapsLockOnConfirm && (
+            <FormHelperText error>
+              <Typography color="warning">CapsLock is on!</Typography>
+            </FormHelperText>
+          )}
+          {isFailed && errorName === "Confirm password does not match!" && (
+            <FormHelperText error>
+              Confirm password does not match!
+            </FormHelperText>
+          )}
+        </FormControl>
         <Button
           variant="contained"
           color="primary"
@@ -212,6 +263,7 @@ export default function Register() {
           <Input
             type="submit"
             disableUnderline={true}
+            value={"Submit"}
             style={{
               color: "#fff",
               fontWeight: "600",

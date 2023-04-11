@@ -4,16 +4,16 @@ import { HeadBar, Tab } from "../components/index";
 function Hero() {
   return (
     <div className="flex flex-1 relative w-full">
-      <div className="hero-content justify-between max-w-none min-w-full">
-        <div className="w-[40%]">
-          <h1 className="text-6xl font-bold text-primary">
+      <div className="hero-content justify-between max-w-none min-w-full flex flex-col sm:flex-row">
+        <div className="sm:w-[40%] flex flex-col items-center sm:items-start">
+          <h1 className="text-5xl md:text-6xl font-bold text-primary text-center sm:text-left">
             Email service for people who want more.
           </h1>
           <p className="py-6 text-lg font-semibold text-gray-400">
             You will love working with Mailify.
           </p>
           <a href="/register">
-            <button className="btn btn-outline btn-primary flex justify-center items-center gap-1">
+            <button className="btn btn-outline btn-primary flex justify-center items-center gap-1 hover:text-white">
               Get Started
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ function Hero() {
             </button>
           </a>
         </div>
-        <img className="mr-0" srcSet="/images/hero.png 3x" alt="" />
+        <img className="mr-0 sm:w-[60%]" srcSet="/images/hero.png 3x" alt="" />
       </div>
     </div>
   );
@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <div className="bg-white">
       <Tab name="Home" />
-      <div className="max-w-[1750px] mx-auto flex flex-col h-screen">
+      <div className="max-w-[1750px] mx-auto flex flex-col h-full min-h-screen">
         <HeadBar />
         <Hero />
       </div>

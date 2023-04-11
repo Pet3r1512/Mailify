@@ -6,14 +6,31 @@ import {
   OutlinedInput,
   IconButton,
   InputLabel,
+  Alert,
+  FormHelperText,
+  Typography,
+  Input,
+  Button,
   CircularProgress,
 } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { VisibilityOff, Visibility, SendSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState("");
+  const [errorName, setErrorname] = useState("");
+  const [isFailed, setIsFailed] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -24,8 +41,8 @@ export default function Register() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    setIsLoading(true);
     await sleep(200);
+    setIsSubmit(true);
     await fetch("http://localhost:8080/api", {
       method: "POST",
       headers: {
@@ -38,90 +55,181 @@ export default function Register() {
       })
       .then((res) => {
         if (res.success === true) {
-          setIsLoading(false);
-          return navigate("/");
+          console.log("true");
+          setIsSubmit(false);
+          navigate("/");
+        } else {
+          setIsFailed(true);
+          setTimeout(() => {
+            setIsFailed(false);
+          }, 3000);
+          setErrorname(res.message);
         }
       });
   };
 
-  if (isLoading) return <CircularProgress />;
-
   return (
-    <form
-      className="flex flex-col gap-y-4 w-[600px] mx-auto"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      {/* Full Name */}
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
-          Full Name
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          fullWidth
-          color="inputColor"
-          label="Full Name"
-          {...register("fullname")}
-        />
-      </FormControl>
-      {/* Phone Number */}
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
-          Phone Number
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          fullWidth
-          color="inputColor"
-          type="tel"
-          pattern="0[0-9]{9}"
-          label="Phone Number"
-          {...register("phonenumber")}
-        />
-      </FormControl>
-      {/* Username - Email Address */}
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
-          Username
-        </InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          fullWidth
-          color="inputColor"
-          endAdornment={
-            <InputAdornment position="start">@mailify.com</InputAdornment>
-          }
-          label="Username"
-          {...register("username")}
-        />
-      </FormControl>
-      {/* Password */}
-      <FormControl variant="outlined" color="inputColor">
-        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={showPassword ? "text" : "password"}
-          fullWidth
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-          {...register("password")}
-        />
-      </FormControl>
-      <button className="btn btn-active btn-primary text-white">
-        <input type="submit" />
-      </button>
-    </form>
+    <>
+      <form
+        className="flex flex-col gap-y-4 sm:w-[600px] mx-auto"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {/* Full Name */}
+        <FormControl variant="outlined">
+          <InputLabel
+            htmlFor="outlined-adornment-password"
+            color={errors.fullname ? "error" : "inputColor"}
+          >
+            Full Name
+          </InputLabel>
+          <OutlinedInput
+            name="fullname"
+            fullWidth
+            required
+            error={!!errors.fullname}
+            color={errors.fullname ? "error" : "inputColor"}
+            label="Full Name"
+            {...register("fullname", {
+              pattern: /^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/gm,
+            })}
+          />
+          {errors.fullname && errors.fullname.type === "pattern" && (
+            <FormHelperText error>Invalid characters</FormHelperText>
+          )}
+        </FormControl>
+        {/* Phone Number */}
+        <FormControl variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password" color="inputColor">
+            Phone Number
+          </InputLabel>
+          <OutlinedInput
+            name="phonenumber"
+            fullWidth
+            required
+            color="inputColor"
+            type="tel"
+            error={!!errors.phonenumber}
+            label="Phone Number"
+            {...register("phonenumber", {
+              pattern: /0[0-9]{9}/,
+            })}
+          />
+          {errors.phonenumber && errors.phonenumber.type === "pattern" && (
+            <FormHelperText error>
+              Your phone number must start with 0 and contains 10 digits
+            </FormHelperText>
+          )}
+          {isFailed && errorName === "Phone number is existed!" && (
+            <FormHelperText error>
+              Phone number is already existed!
+            </FormHelperText>
+          )}
+        </FormControl>
+        {/* Username - Email Address */}
+        <FormControl variant="outlined">
+          <InputLabel
+            htmlFor="outlined-adornment-password"
+            color={isFailed ? "error" : "inputColor"}
+          >
+            Username
+          </InputLabel>
+          <OutlinedInput
+            name="username"
+            fullWidth
+            required
+            error={!!errors.username}
+            color={isFailed ? `error` : "inputColor"}
+            endAdornment={
+              <InputAdornment position="start">@mailify.com</InputAdornment>
+            }
+            label="Username"
+            {...register("username", {
+              maxLength: 30,
+              pattern: /^[a-zA-Z0-9.]*$/,
+            })}
+          />
+          {errors.username && errors.username.type === "maxLength" && (
+            <FormHelperText error>Your username is too long!</FormHelperText>
+          )}
+          {errors.username && errors.username.type === "pattern" && (
+            <FormHelperText error>
+              Your username contains invalid characters!
+            </FormHelperText>
+          )}
+          {isFailed && errorName === "Username is existed!" && (
+            <FormHelperText error>Username is already existed!</FormHelperText>
+          )}
+        </FormControl>
+        {/* Password */}
+        <FormControl
+          variant="outlined"
+          color={errors.password ? "error" : "inputColor"}
+        >
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            name="password"
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            required
+            error={!!errors.password}
+            onKeyUp={checkCapsLock}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+            {...register("password", {
+              minLength: 8,
+            })}
+          />
+          {errors.password && errors.password.type === "minLength" && (
+            <FormHelperText error>
+              Password must have at least 8 characters
+            </FormHelperText>
+          )}
+          {isCapsLockOn && (
+            <FormHelperText error>
+              <Typography color="warning">CapsLock is on!</Typography>
+            </FormHelperText>
+          )}
+        </FormControl>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={isSubmit ? <></> : <SendSharp />}
+        >
+          <Input
+            type="submit"
+            disableUnderline={true}
+            style={{
+              color: "#fff",
+              fontWeight: "600",
+            }}
+          />
+          {isSubmit ? (
+            <CircularProgress
+              size={20}
+              style={{
+                color: "#fff",
+                marginLeft: "5px",
+              }}
+            />
+          ) : (
+            <></>
+          )}
+        </Button>
+      </form>
+    </>
   );
 }

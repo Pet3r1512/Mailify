@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const { addUser, findUser } = require('../database/query')
+const { findUsername } = require('../database/validate')
 
 router.post('/signin', async (req, res) => {
     const user = req.body
@@ -9,8 +10,16 @@ router.post('/signin', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const userData = req.body
-    addUser(userData)
-    return res.send({success: true})
+    const result = await addUser(userData)
+    if(result.message === true) {
+        return res.status(200).send({success: true})
+    }
+    return res.send({success: false})
+})
+
+router.post('/checkUsername', async(req, res) => {
+    const username = req.body
+    return res.send(findUsername(username))
 })
 
 router.delete('/user/:id', (req, res) => {

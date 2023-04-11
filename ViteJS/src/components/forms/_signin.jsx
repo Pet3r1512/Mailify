@@ -9,14 +9,18 @@ import {
   IconButton,
   InputLabel,
   Typography,
+  Button,
+  Input,
   FormHelperText,
 } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { VisibilityOff, Visibility, SendSharp } from "@mui/icons-material";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [onBlueMessage, setOnBlueMessage] = useState("");
+  const [isSubmit, setIsSubmit] = useState("");
+  const [errorName, setErrorname] = useState("");
 
   const {
     register,
@@ -29,6 +33,7 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     await sleep(200);
+    setIsSubmit(true);
     await fetch("http://localhost:8080/api/signin", {
       method: "POST",
       headers: {
@@ -41,6 +46,7 @@ export default function SignIn() {
       })
       .then((res) => {
         if (res.success === true) {
+          setIsSubmit(false);
           return navigate("/");
         }
       });
@@ -121,9 +127,31 @@ export default function SignIn() {
           {...register("password")}
         />
       </FormControl>
-      <button className="btn btn-active btn-primary text-white">
-        <input type="submit" />
-      </button>
+      <Button
+        variant="contained"
+        color="primary"
+        endIcon={isSubmit ? <></> : <SendSharp />}
+      >
+        <Input
+          type="submit"
+          disableUnderline={true}
+          style={{
+            color: "#fff",
+            fontWeight: "600",
+          }}
+        />
+        {isSubmit ? (
+          <CircularProgress
+            size={20}
+            style={{
+              color: "#fff",
+              marginLeft: "5px",
+            }}
+          />
+        ) : (
+          <></>
+        )}
+      </Button>
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -20,6 +20,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
 function Head() {
+  const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
+
   return (
     <Box
       display={"flex"}
@@ -54,25 +56,44 @@ function Head() {
       </Box>
       {/* Middle - Search bar */}
       <Box display={"flex"} flex={1} maxWidth={"50%"} justifyContent={"start"}>
-        <FormControl fullWidth>
+        <FormControl
+          fullWidth={isSearchBarFocused ? true : false}
+          style={{
+            transition: "all",
+            transitionDuration: 2000,
+          }}
+        >
           <OutlinedInput
+            onFocus={() => {
+              setIsSearchBarFocused(true);
+            }}
+            onBlur={() => {
+              setIsSearchBarFocused(false);
+            }}
             style={{
               padding: "0 10 px",
             }}
+            placeholder="Search for mails"
             id="outlined-adornment-amount"
             startAdornment={
               <InputAdornment position="start">
                 <Tooltip title="Search">
-                  <SearchIcon />
+                  <SearchIcon
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  />
                 </Tooltip>
               </InputAdornment>
             }
             endAdornment={
               <InputAdornment position="end">
                 <Tooltip title="Add filter">
-                  {/* <Button style={{ padding: 0, width: "24px" }}> */}
-                  <FilterListIcon />
-                  {/* </Button> */}
+                  <FilterListIcon
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  />
                 </Tooltip>
               </InputAdornment>
             }

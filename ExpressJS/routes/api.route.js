@@ -5,8 +5,6 @@ const { findUsername } = require('../database/validate')
 router.post('/signin', async (req, res) => {
     const user = req.body
     const result = await findUser(user)
-
-    console.log(result)
     if(result.message === true) {
         return res.send({success: true})
     }

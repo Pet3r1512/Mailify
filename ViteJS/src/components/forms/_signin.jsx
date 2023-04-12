@@ -56,7 +56,7 @@ export default function SignIn() {
         if (res.success === true) {
           setIsSubmit(false);
           setSigninError(true);
-          return navigate("/");
+          return navigate("/inbox");
         } else {
           setIsSubmit(false);
           setSigninError(false);

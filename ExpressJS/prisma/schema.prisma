@@ -22,30 +22,23 @@ model User {
 }
 
 model Mail {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  mailId    Int
-  title     String
-  content   Content  @relation(fields: [contentId], references: [id])
-  sentAt    DateTime @default(now())
-  sender    String
-  recievers String[]
-  contentId String   @db.ObjectId
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  sentAt       DateTime     @default(now())
+  sender       String
+  receivers    String[] //contain a list of user's Id who receive this mail
+  label        String // Important, Emergency...
+  attachements Attachment[]
 
   @@unique([id, title])
 }
 
-model Content {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  body       String // Text in mails
-  Mail       Mail[]
-  attachment Attachment[]
-}
-
 model Attachment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  type      String //docx, pdf, png, ...
-  size      Int //kB, MB 
-  link      String //Link to Cloudinary
-  Content   Content? @relation(fields: [contentId], references: [id])
-  contentId String?  @db.ObjectId
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  type   String //docx, pdf, png, ...
+  size   Int //kB, MB 
+  link   String //Link to Cloudinary
+  Mail   Mail?   @relation(fields: [id], references: [id])
+  mailId String? @db.ObjectId
 }

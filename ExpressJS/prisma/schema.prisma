@@ -20,3 +20,32 @@ model User {
 
   @@unique([id, username, phonenumber])
 }
+
+model Mail {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  mailId    Int
+  title     String
+  content   Content  @relation(fields: [contentId], references: [id])
+  sentAt    DateTime @default(now())
+  sender    String
+  recievers String[]
+  contentId String   @db.ObjectId
+
+  @@unique([id, title])
+}
+
+model Content {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  body       String // Text in mails
+  Mail       Mail[]
+  attachment Attachment[]
+}
+
+model Attachment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String //docx, pdf, png, ...
+  size      Int //kB, MB 
+  link      String //Link to Cloudinary
+  Content   Content? @relation(fields: [contentId], references: [id])
+  contentId String?  @db.ObjectId
+}

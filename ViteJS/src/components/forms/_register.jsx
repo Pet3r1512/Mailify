@@ -32,6 +32,7 @@ export default function Register() {
       setIsCapsLockOn(false);
     }
   };
+
   const checkCapsLockConfirm = (event) => {
     if (event.getModifierState("CapsLock")) {
       setIsCapsLockOnConfirm(true);

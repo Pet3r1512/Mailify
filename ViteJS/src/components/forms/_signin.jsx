@@ -2,25 +2,25 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
-  TextField,
   InputAdornment,
   FormControl,
   OutlinedInput,
   IconButton,
   InputLabel,
-  Typography,
   Button,
   Input,
   FormHelperText,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 import { VisibilityOff, Visibility, SendSharp } from "@mui/icons-material";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [onBlueMessage, setOnBlueMessage] = useState("");
   const [isSubmit, setIsSubmit] = useState("");
-  const [errorName, setErrorname] = useState("");
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [signinError, setSigninError] = useState(false);
 
   const {
     register,
@@ -30,6 +30,14 @@ export default function SignIn() {
   } = useForm();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const navigate = useNavigate();
+
+  const checkCapsLock = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     await sleep(200);
@@ -47,28 +55,12 @@ export default function SignIn() {
       .then((res) => {
         if (res.success === true) {
           setIsSubmit(false);
+          setSigninError(true);
           return navigate("/");
-        }
-      });
-  };
-
-  const onBlurUsername = async (username) => {
-    await sleep(200);
-    await fetch("http://localhost:8080/api/checkUsername", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(username),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.success === true) {
-          setOnBlueMessage("Correct Username");
         } else {
-          setOnBlueMessage("Sw");
+          setIsSubmit(false);
+          setSigninError(false);
+          setErrorMessage(res.message);
         }
       });
   };
@@ -92,16 +84,9 @@ export default function SignIn() {
           endAdornment={
             <InputAdornment position="start">@mailify.com</InputAdornment>
           }
-          onBlur={(e) => {
-            setUsername(e.target.value);
-            onBlurUsername(username);
-          }}
           label="Username"
           {...register("username")}
         />
-        {onBlueMessage !== "" && (
-          <FormHelperText>{onBlueMessage}</FormHelperText>
-        )}
       </FormControl>
       {/* Password */}
       <FormControl variant="outlined" color="inputColor">
@@ -110,6 +95,7 @@ export default function SignIn() {
           id="outlined-adornment-password"
           type={showPassword ? "text" : "password"}
           fullWidth
+          onKeyUp={checkCapsLock}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -119,16 +105,27 @@ export default function SignIn() {
                 }}
                 edge="end"
               >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
+                {!showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           }
           label="Password"
           {...register("password")}
         />
+        {isCapsLockOn && (
+          <FormHelperText error>
+            <Typography color="warning">CapsLock is on!</Typography>
+          </FormHelperText>
+        )}
+        {!signinError && errorMessage && (
+          <FormHelperText error>
+            <Typography>{errorMessage}</Typography>
+          </FormHelperText>
+        )}
       </FormControl>
       <Button
         variant="contained"
+        type="submit"
         color="primary"
         endIcon={isSubmit ? <></> : <SendSharp />}
       >
@@ -140,7 +137,7 @@ export default function SignIn() {
             fontWeight: "600",
           }}
         />
-        {isSubmit ? (
+        {isSubmit && signinError === false ? (
           <CircularProgress
             size={20}
             style={{

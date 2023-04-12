@@ -8,12 +8,18 @@ function encryptingPassword(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(saltRounds))
 }
 
-function decryptingPassword(hash) {
+function decryptingPassword(password, hash) {
     return bcrypt.compareSync(password, hash)
 }
 
 async function addUser(user) {
-    const { fullname, phonenumber, username, password } = user
+    const { fullname, phonenumber, username, password, confirm_password } = user
+
+    const phonenumberExists = await prisma.user.count({
+        where: {
+            phonenumber: phonenumber,
+        }
+    })
 
     const usernameExists = await prisma.user.count({
         where: {
@@ -21,11 +27,9 @@ async function addUser(user) {
         }
     })
 
-    const phonenumberExists = await prisma.user.count({
-        where: {
-            phonenumber: phonenumber,
-        }
-    })
+    if(password !== confirm_password) {
+        return {message: "Confirm password does not match!"}
+    }
 
     if(usernameExists > 0) return {message: "Username is existed!"}
 
@@ -51,7 +55,10 @@ async function findUser(user) {
             username: username,
         }
     })    
-    if(encryptingPassword(password) === currentUser.password) return {message: true}
+
+    if(currentUser === null)  return {message: false, error: "Invalid username or password"}
+    
+    else if(decryptingPassword(password, currentUser.password) && currentUser.username === username) return {message: true}
 }
 
 module.exports = { addUser, findUser }

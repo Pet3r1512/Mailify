@@ -6,7 +6,6 @@ import {
   OutlinedInput,
   IconButton,
   InputLabel,
-  Alert,
   FormHelperText,
   Typography,
   Input,
@@ -18,16 +17,27 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmit, setIsSubmit] = useState("");
   const [errorName, setErrorname] = useState("");
   const [isFailed, setIsFailed] = useState(false);
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+  const [isCapsLockOnConfirm, setIsCapsLockOnConfirm] = useState(false);
+  const [isPasswordMatch, setIsPasswordMatch] = useState();
 
   const checkCapsLock = (event) => {
     if (event.getModifierState("CapsLock")) {
       setIsCapsLockOn(true);
     } else {
       setIsCapsLockOn(false);
+    }
+  };
+
+  const checkCapsLockConfirm = (event) => {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOnConfirm(true);
+    } else {
+      setIsCapsLockOnConfirm(false);
     }
   };
 
@@ -55,7 +65,6 @@ export default function Register() {
       })
       .then((res) => {
         if (res.success === true) {
-          console.log("true");
           setIsSubmit(false);
           navigate("/");
         } else {
@@ -64,6 +73,9 @@ export default function Register() {
             setIsFailed(false);
           }, 3000);
           setErrorname(res.message);
+          if (res.message === "Confirm password does not match!") {
+            setIsPasswordMatch(false);
+          }
         }
       });
   };
@@ -184,7 +196,7 @@ export default function Register() {
                   }}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {!showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
@@ -204,9 +216,56 @@ export default function Register() {
             </FormHelperText>
           )}
         </FormControl>
+        {/* Confirm password */}
+        <FormControl
+          variant="outlined"
+          color={errors.confirm_password ? "error" : "inputColor"}
+        >
+          <InputLabel htmlFor="outlined-adornment-password">
+            Confirm Password
+          </InputLabel>
+          <OutlinedInput
+            name="confirm_password"
+            type={showConfirmPassword ? "text" : "password"}
+            fullWidth
+            required
+            error={!!errors.confirm_password}
+            onKeyUp={checkCapsLockConfirm}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => {
+                    setShowConfirmPassword(!showConfirmPassword);
+                  }}
+                  edge="end"
+                >
+                  {!showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Confirm password"
+            {...register("confirm_password")}
+          />
+          {isCapsLockOnConfirm && (
+            <FormHelperText error>
+              <Typography color="warning">CapsLock is on!</Typography>
+            </FormHelperText>
+          )}
+          {isPasswordMatch === false &&
+            errorName === "Confirm password does not match!" && (
+              <FormHelperText error>
+                Confirm password does not match!
+              </FormHelperText>
+            )}
+        </FormControl>
         <Button
           variant="contained"
           color="primary"
+          type="submit"
+          onClick={() => {
+            setIsPasswordMatch(!isPasswordMatch);
+          }}
           endIcon={isSubmit ? <></> : <SendSharp />}
         >
           <Input
@@ -216,8 +275,8 @@ export default function Register() {
               color: "#fff",
               fontWeight: "600",
             }}
-          />
-          {isSubmit ? (
+          ></Input>
+          {isSubmit && isPasswordMatch ? (
             <CircularProgress
               size={20}
               style={{

@@ -4,8 +4,13 @@ const { findUsername } = require('../database/validate')
 
 router.post('/signin', async (req, res) => {
     const user = req.body
-    findUser(user)
-    return res.send({success: true})
+    const result = await findUser(user)
+
+    console.log(result)
+    if(result.message === true) {
+        return res.send({success: true})
+    }
+    return res.send({success: false, message: result.error})
 })
 
 router.post('/', async (req, res) => {
@@ -14,7 +19,7 @@ router.post('/', async (req, res) => {
     if(result.message === true) {
         return res.status(200).send({success: true})
     }
-    return res.send({success: false})
+    return res.send({success: false, message: result.message})
 })
 
 router.post('/checkUsername', async(req, res) => {

@@ -14,8 +14,9 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Sidebar from "./Sidebar";
 import MenuIcon from "@mui/icons-material/Menu";
+import Sidebar from "./Sidebar";
+import Postbox from "./Postbox";
 
 function Head({ showSideBar, setShowSideBar }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
@@ -147,14 +148,7 @@ function Template({ children }) {
         sx={{ height: "100%" }}
       >
         <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
-        <Box
-          borderRadius={5}
-          flex={1}
-          overflow={"auto"}
-          style={{
-            backgroundColor: "#fff",
-          }}
-        ></Box>
+        <Postbox />
       </Box>
     </Box>
   );

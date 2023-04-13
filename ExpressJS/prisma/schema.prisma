@@ -27,8 +27,7 @@ model Mail {
   content      String
   sentAt       DateTime     @default(now())
   sender       String
-  receivers    String[] //contain a list of user's Id who receive this mail
-  label        String // Important, Emergency...
+  receivers    Json //contain a list of user's Id who receive this mail
   attachements Attachment[]
 
   @@unique([id, title])

@@ -1,33 +1,35 @@
 import React, { useState } from "react";
 
-import MenuIcon from "@mui/icons-material/Menu";
-
 import {
   Box,
   Link,
   Tooltip,
-  TextField,
   Avatar,
   FormControl,
-  FilledInput,
   OutlinedInput,
   InputAdornment,
-  Button,
+  IconButton,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import Sidebar from "./Sidebar";
+import MenuIcon from "@mui/icons-material/Menu";
 
-function Head() {
+function Head({ showSideBar, setShowSideBar }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
   return (
     <Box
       display={"flex"}
-      gap={"0 30px"}
       alignItems={"center"}
-      justifyContent={"space-around"}
+      // justifyContent={"space-between"}
+      gap={"30px"}
+      padding={"0 20px"}
+      style={{
+        backgroundColor: "#d9d9d9",
+      }}
     >
       {/* Left */}
       <Box
@@ -38,20 +40,28 @@ function Head() {
         width={"fit-content"}
       >
         <Tooltip title="Menu">
-          <MenuIcon
-            style={{
-              color: "#000",
-              fontWeight: 700,
-              position: "relative",
-              top: "-2.8px",
+          <IconButton
+            aria-label="toggle password visibility"
+            onClick={() => {
+              setShowSideBar(!showSideBar);
             }}
-            fontSize={"large"}
-            height={"40px"}
-          />
+            edge="end"
+          >
+            <MenuIcon
+              style={{
+                color: "#000",
+                fontWeight: 700,
+                position: "relative",
+                top: "-2.8px",
+              }}
+              fontSize={"large"}
+              height={"40px"}
+            />
+          </IconButton>
         </Tooltip>
 
         <Link href="/inbox">
-          <img srcSet="/images/mailify.png 2.8x" alt="" />
+          <img srcSet="/images/mailify.png 4x" alt="" />
         </Link>
       </Box>
       {/* Middle - Search bar */}
@@ -104,7 +114,9 @@ function Head() {
       <Box
         display={"flex"}
         width={"25%"}
+        flex={1}
         justifyContent={"flex-end"}
+        alignItems={"center"}
         gap={"8px"}
         color="common.black"
       >
@@ -123,9 +135,27 @@ function Head() {
 }
 
 function Template({ children }) {
+  const [showSideBar, setShowSideBar] = useState(false);
+
   return (
-    <Box>
-      <Head />
+    <Box display={"flex"} flexDirection={"column"} height={"100vh"}>
+      <Head showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+      <Box
+        display={"flex"}
+        padding={`20px 20px 20px ${!showSideBar ? "0" : "20px"}`}
+        gap={"8px"}
+        sx={{ height: "100%" }}
+      >
+        <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+        <Box
+          borderRadius={5}
+          flex={1}
+          overflow={"auto"}
+          style={{
+            backgroundColor: "#fff",
+          }}
+        ></Box>
+      </Box>
     </Box>
   );
 }

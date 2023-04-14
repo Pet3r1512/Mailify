@@ -148,7 +148,7 @@ function Template({ children }) {
         sx={{ height: "100%" }}
       >
         <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
-        <Postbox />
+        <Postbox showSideBar={showSideBar} />
       </Box>
     </Box>
   );

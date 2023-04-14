@@ -40,6 +40,9 @@ export default function Mail() {
             width={"fit-content"}
             variant="caption"
             color="common.black"
+            sx={{
+              marginTop: "1.4px",
+            }}
           >
             AI Chat, Schedule Templates, SAML & SCIM AI Chat
           </Typography>

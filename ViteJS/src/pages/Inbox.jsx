@@ -1,24 +1,22 @@
-import React, { createContext, useState } from "react";
+import React from "react";
 
 import { Box } from "@mui/material";
 import { Tab, Template } from "../components";
-import { ThemeContext } from "@emotion/react";
 
 function Inbox() {
   return (
-    <>
-      {/* <ThemeContext.Provider value={[showSideBar, setShowSideBar]}> */}
+    <Box height={"100vh"}>
       <Tab name={"Inbox"} />
       <Box
         height={"100vh"}
+        overflow={"hidden"}
         style={{
           backgroundColor: "#d9d9d9",
         }}
       >
         <Template />
       </Box>
-      {/* </ThemeContext.Provider> */}
-    </>
+    </Box>
   );
 }
 

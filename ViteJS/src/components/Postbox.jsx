@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Tabs, Tab, Tooltip, TablePagination } from "@mui/material";
+import InboxIcon from "@mui/icons-material/Inbox";
+import LabelIcon from "@mui/icons-material/Label";
+import PeopleIcon from "@mui/icons-material/People";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import data from "./mailsExample.json";
 import Mail from "./Mail";
 
 function TabPanel(props) {
@@ -11,6 +16,7 @@ function TabPanel(props) {
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
+      color="#d9d9d9"
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
@@ -39,17 +45,31 @@ function Panel() {
 
   return (
     <>
-      <Box>
+      <Box color="common.black" fontWeight={"bold"}>
         <Tabs
           value={panel}
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Main" {...a11yProps(0)} />
-          <Tab label="Social Media" {...a11yProps(1)} />
-          <Tab label="Advertisment" {...a11yProps(2)} />
+          <Tab
+            icon={<InboxIcon />}
+            iconPosition="start"
+            label="Main"
+            {...a11yProps(0)}
+          />
+          <Tab
+            icon={<LabelIcon />}
+            iconPosition="start"
+            label="Social Media"
+            {...a11yProps(1)}
+          />
+          <Tab
+            icon={<PeopleIcon />}
+            iconPosition="start"
+            label="Advertisment"
+            {...a11yProps(2)}
+          />
         </Tabs>
-        ;
       </Box>
       <TabPanel value={"Main"} index={0}>
         Main
@@ -64,23 +84,85 @@ function Panel() {
   );
 }
 
-export default function Postbox({ children, showSideBar }) {
+export default function Postbox({ children }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(30);
+
+  let pageContent = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  useEffect(() => {
+    pageContent = data.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+  }, [page, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 30));
+    setPage(0);
+  }
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   return (
     <Box
       borderRadius={5}
       flex={1}
       display={"flex"}
+      flexGrow={1}
       flexDirection={"column"}
-      gap={"5px"}
       overflow={"auto"}
       padding={"15px"}
+      gap={"10px"}
       style={{
         backgroundColor: "#fff",
       }}
     >
-      {showSideBar && <Panel />}
-      <Mail />
-      <Mail />
+      <Box
+        display={"flex"}
+        gap={"5px"}
+        height={"fit-content"}
+        color="common.black"
+        justifyContent={"space-between"}
+        padding={"0 10px"}
+      >
+        <Tooltip title="Refresh">
+          <button onClick={refreshPage}>
+            <RefreshIcon />
+          </button>
+        </Tooltip>
+        <TablePagination
+          rowsPerPageOptions={[]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
+      <Panel />
+      <Box
+        flex={1}
+        flexGrow={1}
+        overflow={"auto"}
+        display={"flex"}
+        gap={"5px"}
+        flexDirection={"column"}
+      >
+        {pageContent.map((index, item) => {
+          return <Mail key={index} />;
+        })}
+      </Box>
     </Box>
   );
 }

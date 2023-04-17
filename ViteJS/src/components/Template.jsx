@@ -139,16 +139,16 @@ function Template({ children }) {
   const [showSideBar, setShowSideBar] = useState(false);
 
   return (
-    <Box display={"flex"} flexDirection={"column"} height={"100vh"}>
+    <Box display={"flex"} flexDirection={"column"} height={"100%"}>
       <Head showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
       <Box
         display={"flex"}
         padding={`20px 20px 20px ${!showSideBar ? "0" : "20px"}`}
         gap={"8px"}
-        sx={{ height: "100%" }}
+        overflow={"auto"}
       >
         <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
-        <Postbox showSideBar={showSideBar} />
+        <Postbox />
       </Box>
     </Box>
   );

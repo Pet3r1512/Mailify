@@ -5,6 +5,7 @@ import InboxIcon from "@mui/icons-material/Inbox";
 import LabelIcon from "@mui/icons-material/Label";
 import PeopleIcon from "@mui/icons-material/People";
 import RefreshIcon from "@mui/icons-material/Refresh";
+
 import data from "./mailsExample.json";
 import Mail from "./Mail";
 
@@ -116,8 +117,8 @@ export default function Postbox({ children }) {
   return (
     <Box
       borderRadius={5}
-      flex={1}
       display={"flex"}
+      flex={1}
       flexGrow={1}
       flexDirection={"column"}
       overflow={"auto"}

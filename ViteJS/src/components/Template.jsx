@@ -139,7 +139,7 @@ function Head({ showSideBar, setShowSideBar }) {
         </Tooltip>
         <Tooltip title="Profile">
           <Avatar onClick={handleClick} sx={{ bgcolor: "#d98d87" }}>
-            P
+            {localStorage.getItem("User").toString().split(" ")[1].slice(0, 1)}
           </Avatar>
         </Tooltip>
         <Menu

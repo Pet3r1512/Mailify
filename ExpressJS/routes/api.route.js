@@ -11,7 +11,7 @@ router.post('/signin', async (req, res) => {
     const result = await findUser(user)
     if(result.message === true) {
         const accessToken = jwt.sign({ username: user.username }, process.env.TOKEN_SECRET);
-        return res.cookie("token", accessToken, { secure: true, maxAge: 1800000 }).send({success: true, accessToken})
+        return res.cookie("token", accessToken, { secure: true, maxAge: 1800000 }).send({success: true, accessToken, fullname: result.fullname})
     }
     return res.send({success: false, message: result.error})
 })

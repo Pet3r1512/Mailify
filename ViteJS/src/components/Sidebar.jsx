@@ -84,8 +84,13 @@ function SideBarList() {
       aria-labelledby="nested-list-subheader"
     >
       {mainFunc}
-      <ListItemButton onClick={handleClick}>
-        <ListItemText primary={open ? "Shorter" : "More"} />
+      <ListItemButton
+        sx={{
+          borderRadius: "0 10px 10px 0",
+        }}
+        onClick={handleClick}
+      >
+        <ListItemText primary={open ? "Less" : "More"} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>

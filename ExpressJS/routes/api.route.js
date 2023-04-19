@@ -1,12 +1,17 @@
 const router = require('express').Router()
 const { addUser, findUser } = require('../database/query')
 const { findUsername } = require('../database/validate')
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 router.post('/signin', async (req, res) => {
     const user = req.body
     const result = await findUser(user)
     if(result.message === true) {
-        return res.send({success: true})
+        const accessToken = jwt.sign({ username: user.username }, process.env.TOKEN_SECRET);
+        return res.cookie("token", accessToken, { secure: true, maxAge: 1800000 }).send({success: true, accessToken})
     }
     return res.send({success: false, message: result.error})
 })

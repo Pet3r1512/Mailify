@@ -55,6 +55,7 @@ export default function SignIn() {
       .then((res) => {
         if (res.success === true) {
           localStorage.setItem("TOKEN", res.accessToken);
+          localStorage.setItem("User", res.fullname);
           setIsSubmit(false);
           setSigninError(true);
           return navigate("/inbox");

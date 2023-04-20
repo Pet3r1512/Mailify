@@ -66,7 +66,7 @@ export default function Register() {
       .then((res) => {
         if (res.success === true) {
           setIsSubmit(false);
-          navigate("/");
+          navigate("/signin");
         } else {
           setIsFailed(true);
           setTimeout(() => {

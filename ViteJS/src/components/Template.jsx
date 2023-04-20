@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -23,11 +23,15 @@ import Postbox from "./Postbox";
 
 function Head({ showSideBar, setShowSideBar }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -139,7 +143,14 @@ function Head({ showSideBar, setShowSideBar }) {
         </Tooltip>
         <Tooltip title="Profile">
           <Avatar onClick={handleClick} sx={{ bgcolor: "#d98d87" }}>
-            {localStorage.getItem("User").toString().split(" ")[1].slice(0, 1)}
+            {localStorage
+              .getItem("User")
+              ?.toString()
+              .split(" ")
+              .slice(-1)[0]
+              .slice(0, 1)
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")}
           </Avatar>
         </Tooltip>
         <Menu
@@ -156,7 +167,8 @@ function Head({ showSideBar, setShowSideBar }) {
           <MenuItem
             onClick={() => {
               localStorage.removeItem("TOKEN");
-              redirect("/");
+              localStorage.removeItem("User");
+              navigate("/");
             }}
           >
             Logout

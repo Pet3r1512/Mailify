@@ -21,7 +21,7 @@ import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import MarkunreadMailboxIcon from "@mui/icons-material/MarkunreadMailbox";
 
 function SideBarList() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [currentListItem, setCurrentListItem] = useState("Recieved");
 
   const handleClick = () => {

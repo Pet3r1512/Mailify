@@ -58,7 +58,8 @@ async function findUser(user) {
 
     if(currentUser === null)  return {message: false, error: "Invalid username or password"}
     
-    else if(decryptingPassword(password, currentUser.password) && currentUser.username === username) return {message: true}
+    else if(decryptingPassword(password, currentUser.password) && currentUser.username === username) 
+        return {message: true, fullname: currentUser.fullname}
 }
 
 module.exports = { addUser, findUser }

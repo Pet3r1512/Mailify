@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import {
   InputAdornment,
   FormControl,
@@ -54,6 +54,8 @@ export default function SignIn() {
       })
       .then((res) => {
         if (res.success === true) {
+          localStorage.setItem("TOKEN", res.accessToken);
+          localStorage.setItem("User", res.fullname);
           setIsSubmit(false);
           setSigninError(true);
           return navigate("/inbox");

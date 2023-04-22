@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -9,6 +10,8 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -20,12 +23,23 @@ import Postbox from "./Postbox";
 
 function Head({ showSideBar, setShowSideBar }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const navigate = useNavigate();
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box
       display={"flex"}
       alignItems={"center"}
-      // justifyContent={"space-between"}
       gap={"30px"}
       padding={"0 20px"}
       style={{
@@ -128,8 +142,38 @@ function Head({ showSideBar, setShowSideBar }) {
           <SettingsIcon fontSize={"large"} />
         </Tooltip>
         <Tooltip title="Profile">
-          <Avatar sx={{ bgcolor: "#d98d87" }}>P</Avatar>
+          <Avatar onClick={handleClick} sx={{ bgcolor: "#d98d87" }}>
+            {localStorage
+              .getItem("User")
+              ?.toString()
+              .split(" ")
+              .slice(-1)[0]
+              .slice(0, 1)
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")}
+          </Avatar>
         </Tooltip>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem
+            onClick={() => {
+              localStorage.removeItem("TOKEN");
+              localStorage.removeItem("User");
+              navigate("/");
+            }}
+          >
+            Logout
+          </MenuItem>
+        </Menu>
       </Box>
     </Box>
   );

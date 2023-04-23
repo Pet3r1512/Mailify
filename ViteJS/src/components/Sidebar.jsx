@@ -103,15 +103,16 @@ function SideBarList() {
 }
 
 export default function Sidebar({ children, showSideBar, setShowSideBar }) {
-  const style = {
-    width: "100%",
-  };
-
   return (
     <Box
       width={"200px"}
-      sx={{ height: "100%" }}
-      display={showSideBar ? "none" : "flex"}
+      sx={{
+        height: "100%",
+        display: {
+          xs: "none",
+          lg: showSideBar ? "none" : "flex",
+        },
+      }}
       paddingLeft={"20px"}
       flexDirection={"column"}
       gap={"20px"}

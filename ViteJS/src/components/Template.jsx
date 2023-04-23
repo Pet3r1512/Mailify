@@ -12,6 +12,13 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  Button,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -20,12 +27,34 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
+import {
+  CheckBoxOutlineBlankOutlined,
+  DraftsOutlined,
+  HomeOutlined,
+  InboxOutlined,
+  MailOutline,
+  ReceiptOutlined,
+} from "@mui/icons-material";
+import DrawerSidebar from "./DrawerSidebar";
 
-function Head({ showSideBar, setShowSideBar }) {
+const data = [
+  {
+    name: "Home",
+    icon: <HomeOutlined />,
+  },
+  { name: "Inbox", icon: <InboxOutlined /> },
+  { name: "Outbox", icon: <CheckBoxOutlineBlankOutlined /> },
+  { name: "Sent mail", icon: <MailOutline /> },
+  { name: "Draft", icon: <DraftsOutlined /> },
+  { name: "Trash", icon: <ReceiptOutlined /> },
+];
+
+function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -58,7 +87,12 @@ function Head({ showSideBar, setShowSideBar }) {
           <IconButton
             aria-label="toggle password visibility"
             onClick={() => {
-              setShowSideBar(!showSideBar);
+              if (window.innerWidth > 768) {
+                setShowSideBar(!showSideBar);
+              } else {
+                console.log("drawer");
+                setShowDrawer(true);
+              }
             }}
             edge="end"
           >
@@ -75,12 +109,30 @@ function Head({ showSideBar, setShowSideBar }) {
           </IconButton>
         </Tooltip>
 
-        <Link href="/inbox">
+        <Link
+          sx={{
+            display: {
+              xs: "none",
+              lg: "unset",
+            },
+          }}
+          href="/inbox"
+        >
           <img srcSet="/images/mailify.png 4x" alt="" />
         </Link>
       </Box>
       {/* Middle - Search bar */}
-      <Box display={"flex"} flex={1} maxWidth={"50%"} justifyContent={"start"}>
+      <Box
+        sx={{
+          maxWidth: {
+            xs: "100%",
+            sm: "50%",
+          },
+        }}
+        display={"flex"}
+        flex={1}
+        justifyContent={"start"}
+      >
         <FormControl
           fullWidth={isSearchBarFocused ? true : false}
           style={{
@@ -127,19 +179,48 @@ function Head({ showSideBar, setShowSideBar }) {
       </Box>
       {/* Right - User's setting */}
       <Box
+        sx={{
+          width: {
+            xs: "40px",
+            sm: "25%",
+          },
+          flex: {
+            xs: 0,
+            sm: 1,
+          },
+        }}
         display={"flex"}
-        width={"25%"}
-        flex={1}
+        // flex={1}
         justifyContent={"flex-end"}
         alignItems={"center"}
         gap={"8px"}
         color="common.black"
       >
         <Tooltip title="Help">
-          <HelpOutlineRoundedIcon fontSize={"large"} />
+          <HelpOutlineRoundedIcon
+            sx={{
+              display: {
+                xs: "none",
+                sm: "unset",
+              },
+              width: {
+                xs: 0,
+                sm: "unset",
+              },
+            }}
+            fontSize={"large"}
+          />
         </Tooltip>
         <Tooltip title="Settings">
-          <SettingsIcon fontSize={"large"} />
+          <SettingsIcon
+            sx={{
+              display: {
+                xs: "none",
+                sm: "unset",
+              },
+            }}
+            fontSize={"large"}
+          />
         </Tooltip>
         <Tooltip title="Profile">
           <Avatar onClick={handleClick} sx={{ bgcolor: "#d98d87" }}>
@@ -181,13 +262,30 @@ function Head({ showSideBar, setShowSideBar }) {
 
 function Template({ children }) {
   const [showSideBar, setShowSideBar] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   return (
     <Box display={"flex"} flexDirection={"column"} height={"100%"}>
-      <Head showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+      <Head
+        showSideBar={showSideBar}
+        setShowSideBar={setShowSideBar}
+        setShowDrawer={setShowDrawer}
+      />
+      <Drawer
+        open={showDrawer}
+        anchor={"left"}
+        onClose={() => setShowDrawer(false)}
+      >
+        <DrawerSidebar />
+      </Drawer>
       <Box
+        sx={{
+          padding: {
+            sm: "10px",
+            lg: `20px 20px 20px ${!showSideBar ? "0" : "20px"}`,
+          },
+        }}
         display={"flex"}
-        padding={`20px 20px 20px ${!showSideBar ? "0" : "20px"}`}
         gap={"8px"}
         overflow={"auto"}
       >

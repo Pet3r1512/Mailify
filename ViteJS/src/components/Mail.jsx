@@ -16,40 +16,92 @@ export default function Mail() {
         sx={{
           maxWidth: "100%",
           width: "100%",
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
+          alignItems: {
+            xs: "start",
+            sm: "center",
+          },
         }}
         display={"flex"}
         gap={"10px"}
-        alignItems={"center"}
       >
         <Checkbox sx={{ padding: 0 }} />
         <Typography
           noWrap
-          sx={{ width: "150px", fontSize: "15px" }}
+          sx={{
+            width: {
+              sm: "120px",
+              lg: "150px",
+            },
+            display: {
+              sm: "block",
+              lg: "unset",
+            },
+            fontSize: "15px",
+          }}
           color="common.black"
         >
           John at Taskade
         </Typography>
         <Box
+          sx={{
+            flexDirection: {
+              xs: "column",
+              lg: "row",
+            },
+            alignItems: {
+              xs: "start",
+              lg: "center",
+            },
+            maxWidth: {
+              xs: "320px",
+              sm: "unset",
+              lg: "100%",
+            },
+          }}
           display="flex"
-          marginTop={"1.5px"}
+          marginTop={"1.8px"}
           flex={1}
           gap={"10px"}
-          alignItems={"center"}
+          // alignItems={"center"}
         >
           <Typography
-            width={"fit-content"}
+            // width={"fit-content"}
             variant="caption"
             color="common.black"
             sx={{
+              flex: {
+                sm: 1,
+                lg: "unset",
+              },
               marginTop: "1.4px",
+              width: {
+                xs: "100%",
+                lg: "fit-content",
+              },
+              textAlign: {
+                xs: "left",
+                lg: "unset",
+              },
             }}
           >
             AI Chat, Schedule Templates, SAML & SCIM AI Chat
           </Typography>
           <Typography
+            sx={{
+              width: {
+                xs: "300px",
+                lg: "500px",
+              },
+              flex: {
+                sm: 1,
+              },
+            }}
             display={"inline-block"}
             flex={1}
-            width={"500px"}
             variant="body2"
             color="initial"
             noWrap
@@ -64,9 +116,21 @@ export default function Mail() {
           </Typography>
         </Box>
         <Typography
-          marginRight={"10px"}
+          sx={{
+            width: {
+              sm: "50px",
+              lg: "100px",
+            },
+            marginRight: {
+              xs: 0,
+              md: "10px",
+            },
+            marginLeft: {
+              xs: "auto",
+              sm: "unset",
+            },
+          }}
           textAlign={"right"}
-          width={"100px"}
           variant="body1"
           color="initial"
         >

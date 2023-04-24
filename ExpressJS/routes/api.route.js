@@ -30,6 +30,10 @@ router.post('/checkUsername', async(req, res) => {
     return res.send(findUsername(username))
 })
 
+router.post('/send', async (req, res) => {
+    return res.send("API for sending mails OK!")
+})
+
 router.delete('/user/:id', (req, res) => {
     return res.send('API ok')
 })

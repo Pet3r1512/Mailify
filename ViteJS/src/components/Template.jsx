@@ -13,12 +13,6 @@ import {
   Menu,
   MenuItem,
   Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  ListItemButton,
-  Button,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -27,27 +21,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
-import {
-  CheckBoxOutlineBlankOutlined,
-  DraftsOutlined,
-  HomeOutlined,
-  InboxOutlined,
-  MailOutline,
-  ReceiptOutlined,
-} from "@mui/icons-material";
 import DrawerSidebar from "./DrawerSidebar";
-
-const data = [
-  {
-    name: "Home",
-    icon: <HomeOutlined />,
-  },
-  { name: "Inbox", icon: <InboxOutlined /> },
-  { name: "Outbox", icon: <CheckBoxOutlineBlankOutlined /> },
-  { name: "Sent mail", icon: <MailOutline /> },
-  { name: "Draft", icon: <DraftsOutlined /> },
-  { name: "Trash", icon: <ReceiptOutlined /> },
-];
 
 function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
@@ -90,7 +64,6 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
               if (window.innerWidth > 768) {
                 setShowSideBar(!showSideBar);
               } else {
-                console.log("drawer");
                 setShowDrawer(true);
               }
             }}
@@ -244,8 +217,8 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
           }}
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem
+            color="primary"
             onClick={() => {
               localStorage.removeItem("TOKEN");
               localStorage.removeItem("User");
@@ -263,20 +236,43 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
 function Template({ children }) {
   const [showSideBar, setShowSideBar] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
+  const [currentListItem, setCurrentListItem] = useState("Recieved");
+  const [open, setOpen] = useState(false);
 
   return (
-    <Box display={"flex"} flexDirection={"column"} height={"100%"}>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      flex={1}
+      sx={{
+        marginBottom: {
+          xs: "10px",
+          lg: "unset",
+        },
+        maxHeight: {
+          xs: "90vh",
+          sm: "95vh",
+          lg: "unset",
+        },
+        overflow: {
+          xs: "hidden",
+          lg: "unset",
+        },
+      }}
+    >
       <Head
         showSideBar={showSideBar}
         setShowSideBar={setShowSideBar}
         setShowDrawer={setShowDrawer}
+        open={open}
+        setOpen={setOpen}
       />
       <Drawer
         open={showDrawer}
         anchor={"left"}
         onClose={() => setShowDrawer(false)}
       >
-        <DrawerSidebar />
+        <DrawerSidebar openDrawer={open} setOpenDrawer={setOpen} />
       </Drawer>
       <Box
         sx={{
@@ -289,7 +285,14 @@ function Template({ children }) {
         gap={"8px"}
         overflow={"auto"}
       >
-        <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+        <Sidebar
+          currentListItem={currentListItem}
+          setCurrentListItem={setCurrentListItem}
+          showSideBar={showSideBar}
+          setShowSideBar={setShowSideBar}
+          open={open}
+          setOpen={setOpen}
+        />
         <Postbox />
       </Box>
     </Box>

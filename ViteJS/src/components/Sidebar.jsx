@@ -107,6 +107,8 @@ export default function Sidebar({
   setOpen,
   currentListItem,
   setCurrentListItem,
+  showEditor,
+  setShowEditor,
 }) {
   return (
     <Box
@@ -126,7 +128,7 @@ export default function Sidebar({
         backgroundColor: "#d9d9d9",
       }}
     >
-      <NewMailButton />
+      <NewMailButton showEditor={showEditor} setShowEditor={setShowEditor} />
       <Box width={"100%"}>
         <SideBarList
           currentListItem={currentListItem}

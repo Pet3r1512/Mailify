@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -13,15 +13,27 @@ import {
   Menu,
   MenuItem,
   Drawer,
+  Dialog,
+  Slide,
+  Typography,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
 import DrawerSidebar from "./DrawerSidebar";
+
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
+import MailEditor from "./MailEditor";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
@@ -238,6 +250,13 @@ function Template({ children }) {
   const [showDrawer, setShowDrawer] = useState(false);
   const [currentListItem, setCurrentListItem] = useState("Recieved");
   const [open, setOpen] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const [rawText, setRawText] = useState("");
+
+  const handleChange = (rawDraftContentState) => {
+    // no need for convertToRaw or stateToHtml anymore
+    console.log(rawDraftContentState);
+  };
 
   return (
     <Box
@@ -251,12 +270,7 @@ function Template({ children }) {
         },
         maxHeight: {
           xs: "90vh",
-          sm: "95vh",
-          lg: "unset",
-        },
-        overflow: {
-          xs: "hidden",
-          lg: "unset",
+          sm: "100vh",
         },
       }}
     >
@@ -280,7 +294,9 @@ function Template({ children }) {
             sm: "10px",
             lg: `20px 20px 20px ${!showSideBar ? "0" : "20px"}`,
           },
+          maxHeight: "100%",
         }}
+        flex={1}
         display={"flex"}
         gap={"8px"}
         overflow={"auto"}
@@ -292,9 +308,51 @@ function Template({ children }) {
           setShowSideBar={setShowSideBar}
           open={open}
           setOpen={setOpen}
+          showEditor={showEditor}
+          setShowEditor={setShowEditor}
         />
         <Postbox />
       </Box>
+      <Dialog
+        sx={{
+          height: "100%",
+        }}
+        open={showEditor}
+        onClose={() => {
+          setShowEditor(false);
+        }}
+        TransitionComponent={Transition}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginLeft: "10px",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography variant="subtitle1" color="initial">
+            New Mail
+          </Typography>
+          <Tooltip title="Close">
+            <IconButton
+              sx={{
+                marginLeft: "auto",
+              }}
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setShowEditor(false);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <MailEditor />
+      </Dialog>
     </Box>
   );
 }

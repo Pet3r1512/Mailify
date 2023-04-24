@@ -14,7 +14,7 @@ function Inbox() {
     <Box height={"100vh"}>
       <Tab name={"Inbox"} />
       <Box
-        height={"100vh"}
+        height={"100%"}
         overflow={"hidden"}
         style={{
           backgroundColor: "#d9d9d9",

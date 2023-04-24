@@ -53,7 +53,7 @@ export default function Register() {
   const onSubmit = async (data) => {
     await sleep(200);
     setIsSubmit(true);
-    await fetch("http://localhost:8080/api", {
+    await fetch("/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

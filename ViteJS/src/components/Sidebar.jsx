@@ -20,10 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import MarkunreadMailboxIcon from "@mui/icons-material/MarkunreadMailbox";
 
-function SideBarList() {
-  const [open, setOpen] = useState(false);
-  const [currentListItem, setCurrentListItem] = useState("Recieved");
-
+function SideBarList({ currentListItem, setCurrentListItem, open, setOpen }) {
   const handleClick = () => {
     setOpen(!open);
   };
@@ -102,16 +99,25 @@ function SideBarList() {
   );
 }
 
-export default function Sidebar({ children, showSideBar, setShowSideBar }) {
-  const style = {
-    width: "100%",
-  };
-
+export default function Sidebar({
+  children,
+  showSideBar,
+  setShowSideBar,
+  open,
+  setOpen,
+  currentListItem,
+  setCurrentListItem,
+}) {
   return (
     <Box
       width={"200px"}
-      sx={{ height: "100%" }}
-      display={showSideBar ? "none" : "flex"}
+      sx={{
+        height: "100%",
+        display: {
+          xs: "none",
+          lg: showSideBar ? "none" : "flex",
+        },
+      }}
       paddingLeft={"20px"}
       flexDirection={"column"}
       gap={"20px"}
@@ -122,13 +128,18 @@ export default function Sidebar({ children, showSideBar, setShowSideBar }) {
     >
       <NewMailButton />
       <Box width={"100%"}>
-        <SideBarList />
+        <SideBarList
+          currentListItem={currentListItem}
+          setCurrentListItem={setCurrentListItem}
+          open={open}
+          setOpen={setOpen}
+        />
       </Box>
     </Box>
   );
 }
 
-const sideBarMainFunc = [
+export const sideBarMainFunc = [
   {
     text: "Recieved",
     icon: <MarkunreadMailboxIcon />,
@@ -147,7 +158,7 @@ const sideBarMainFunc = [
   },
 ];
 
-const sideBarExpandFunc = [
+export const sideBarExpandFunc = [
   {
     text: "Important",
     icon: <LabelImportantIcon />,

@@ -12,6 +12,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Drawer,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -20,12 +21,14 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
+import DrawerSidebar from "./DrawerSidebar";
 
-function Head({ showSideBar, setShowSideBar }) {
+function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -58,7 +61,11 @@ function Head({ showSideBar, setShowSideBar }) {
           <IconButton
             aria-label="toggle password visibility"
             onClick={() => {
-              setShowSideBar(!showSideBar);
+              if (window.innerWidth > 768) {
+                setShowSideBar(!showSideBar);
+              } else {
+                setShowDrawer(true);
+              }
             }}
             edge="end"
           >
@@ -75,12 +82,30 @@ function Head({ showSideBar, setShowSideBar }) {
           </IconButton>
         </Tooltip>
 
-        <Link href="/inbox">
+        <Link
+          sx={{
+            display: {
+              xs: "none",
+              lg: "unset",
+            },
+          }}
+          href="/inbox"
+        >
           <img srcSet="/images/mailify.png 4x" alt="" />
         </Link>
       </Box>
       {/* Middle - Search bar */}
-      <Box display={"flex"} flex={1} maxWidth={"50%"} justifyContent={"start"}>
+      <Box
+        sx={{
+          maxWidth: {
+            xs: "100%",
+            sm: "50%",
+          },
+        }}
+        display={"flex"}
+        flex={1}
+        justifyContent={"start"}
+      >
         <FormControl
           fullWidth={isSearchBarFocused ? true : false}
           style={{
@@ -127,19 +152,48 @@ function Head({ showSideBar, setShowSideBar }) {
       </Box>
       {/* Right - User's setting */}
       <Box
+        sx={{
+          width: {
+            xs: "40px",
+            sm: "25%",
+          },
+          flex: {
+            xs: 0,
+            sm: 1,
+          },
+        }}
         display={"flex"}
-        width={"25%"}
-        flex={1}
+        // flex={1}
         justifyContent={"flex-end"}
         alignItems={"center"}
         gap={"8px"}
         color="common.black"
       >
         <Tooltip title="Help">
-          <HelpOutlineRoundedIcon fontSize={"large"} />
+          <HelpOutlineRoundedIcon
+            sx={{
+              display: {
+                xs: "none",
+                sm: "unset",
+              },
+              width: {
+                xs: 0,
+                sm: "unset",
+              },
+            }}
+            fontSize={"large"}
+          />
         </Tooltip>
         <Tooltip title="Settings">
-          <SettingsIcon fontSize={"large"} />
+          <SettingsIcon
+            sx={{
+              display: {
+                xs: "none",
+                sm: "unset",
+              },
+            }}
+            fontSize={"large"}
+          />
         </Tooltip>
         <Tooltip title="Profile">
           <Avatar onClick={handleClick} sx={{ bgcolor: "#d98d87" }}>
@@ -163,8 +217,8 @@ function Head({ showSideBar, setShowSideBar }) {
           }}
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem
+            color="primary"
             onClick={() => {
               localStorage.removeItem("TOKEN");
               localStorage.removeItem("User");
@@ -181,17 +235,64 @@ function Head({ showSideBar, setShowSideBar }) {
 
 function Template({ children }) {
   const [showSideBar, setShowSideBar] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [currentListItem, setCurrentListItem] = useState("Recieved");
+  const [open, setOpen] = useState(false);
 
   return (
-    <Box display={"flex"} flexDirection={"column"} height={"100%"}>
-      <Head showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      flex={1}
+      sx={{
+        marginBottom: {
+          xs: "10px",
+          lg: "unset",
+        },
+        maxHeight: {
+          xs: "90vh",
+          sm: "95vh",
+          lg: "unset",
+        },
+        overflow: {
+          xs: "hidden",
+          lg: "unset",
+        },
+      }}
+    >
+      <Head
+        showSideBar={showSideBar}
+        setShowSideBar={setShowSideBar}
+        setShowDrawer={setShowDrawer}
+        open={open}
+        setOpen={setOpen}
+      />
+      <Drawer
+        open={showDrawer}
+        anchor={"left"}
+        onClose={() => setShowDrawer(false)}
+      >
+        <DrawerSidebar openDrawer={open} setOpenDrawer={setOpen} />
+      </Drawer>
       <Box
+        sx={{
+          padding: {
+            sm: "10px",
+            lg: `20px 20px 20px ${!showSideBar ? "0" : "20px"}`,
+          },
+        }}
         display={"flex"}
-        padding={`20px 20px 20px ${!showSideBar ? "0" : "20px"}`}
         gap={"8px"}
         overflow={"auto"}
       >
-        <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+        <Sidebar
+          currentListItem={currentListItem}
+          setCurrentListItem={setCurrentListItem}
+          showSideBar={showSideBar}
+          setShowSideBar={setShowSideBar}
+          open={open}
+          setOpen={setOpen}
+        />
         <Postbox />
       </Box>
     </Box>

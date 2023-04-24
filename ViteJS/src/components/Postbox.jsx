@@ -46,11 +46,27 @@ function Panel() {
 
   return (
     <>
-      <Box color="common.black" fontWeight={"bold"}>
+      <Box
+        sx={{
+          width: {
+            xs: 0,
+            sm: "unset",
+          },
+          display: {
+            xs: "none",
+            sm: "unset",
+          },
+        }}
+        color="common.black"
+        fontWeight={"bold"}
+      >
         <Tabs
           value={panel}
           onChange={handleChange}
-          aria-label="basic tabs example"
+          // aria-label="basic tabs example"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
         >
           <Tab
             icon={<InboxIcon />}

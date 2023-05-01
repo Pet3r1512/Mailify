@@ -28,7 +28,7 @@ model Mail {
   sentAt       DateTime     @default(now())
   sender       String
   receivers    Json //contain a list of user's Id who receive this mail
-  attachements Attachment[]
+  attachements Attachment[] @ignore
 
   @@unique([id, title])
 }
@@ -37,7 +37,10 @@ model Attachment {
   id     String  @id @default(auto()) @map("_id") @db.ObjectId
   type   String //docx, pdf, png, ...
   size   Int //kB, MB 
-  link   String //Link to Cloudinary
   Mail   Mail?   @relation(fields: [id], references: [id])
   mailId String? @db.ObjectId
+}
+
+model Draft {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 }

@@ -27,7 +27,6 @@ import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
 import DrawerSidebar from "./DrawerSidebar";
 
-import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import MailEditor from "./MailEditor";
 
@@ -332,7 +331,11 @@ function Template({ children }) {
             borderRadius: "10px",
           }}
         >
-          <Typography variant="subtitle1" color="initial">
+          <Typography
+            sx={{ cursor: "default" }}
+            variant="subtitle1"
+            color="initial"
+          >
             New Mail
           </Typography>
           <Tooltip title="Close">
@@ -351,7 +354,7 @@ function Template({ children }) {
             </IconButton>
           </Tooltip>
         </Box>
-        <MailEditor />
+        <MailEditor showEditor={setShowEditor} setShowEditor={setShowEditor} />
       </Dialog>
     </Box>
   );

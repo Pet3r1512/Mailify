@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { addUser, findUser } = require('../database/query')
+const { addUser, findUser, sendMail } = require('../database/query')
 const { findUsername } = require('../database/validate')
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -11,7 +11,7 @@ router.post('/signin', async (req, res) => {
     const result = await findUser(user)
     if(result.message === true) {
         const accessToken = jwt.sign({ username: user.username }, process.env.TOKEN_SECRET);
-        return res.cookie("token", accessToken, { secure: true, maxAge: 1800000 }).send({success: true, accessToken, fullname: result.fullname})
+        return res.cookie("token", accessToken, { secure: true, maxAge: 18000 }).send({success: true, accessToken, fullname: result.fullname})
     }
     return res.send({success: false, message: result.error})
 })
@@ -31,7 +31,13 @@ router.post('/checkUsername', async(req, res) => {
 })
 
 router.post('/send', async (req, res) => {
-    return res.send("API for sending mails OK!")
+    const mailContent = req.body
+    console.log(req.body)
+    const result = await sendMail(mailContent)
+    if(result.message === true) {
+        return res.status(200).send({success: true})
+    }
+    return res.send({success: false, message: "Send failed"})
 })
 
 router.delete('/user/:id', (req, res) => {

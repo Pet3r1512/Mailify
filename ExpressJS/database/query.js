@@ -62,4 +62,16 @@ async function findUser(user) {
         return {message: true, fullname: currentUser.fullname}
 }
 
-module.exports = { addUser, findUser }
+async function sendMail(content) {
+    await prisma.mail.create({
+        data: {
+            title: "content",
+            content: content,
+            sender: "Thanh Phong",
+            receivers: {"name": "Thuy Vi"},
+        }
+    })
+    return {message: true}
+}
+
+module.exports = { addUser, findUser, sendMail }

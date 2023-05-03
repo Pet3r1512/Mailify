@@ -31,8 +31,7 @@ router.post('/checkUsername', async(req, res) => {
 })
 
 router.post('/send', async (req, res) => {
-    const mailContent = req.body
-    console.log(req.body)
+    const mailContent = JSON.stringify(req.body.inbox)
     const result = await sendMail(mailContent)
     if(result.message === true) {
         return res.status(200).send({success: true})

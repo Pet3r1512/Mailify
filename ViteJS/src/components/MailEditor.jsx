@@ -30,14 +30,13 @@ import {
 } from "suneditor/src/plugins";
 
 export default function MailEditor({ showEditor, setShowEditor }) {
-  const [content, setContent] = useState();
+  const [inbox, setInbox] = useState();
   const [sendError, setSendError] = useState("");
 
   const editor = useRef();
 
   const getSunEditorInstance = (sunEditor) => {
     editor.current = sunEditor;
-    console.log(editor.current);
   };
 
   const {
@@ -51,32 +50,38 @@ export default function MailEditor({ showEditor, setShowEditor }) {
 
   function handleChange(content) {
     console.log("OnChange: ", content);
-    setContent(content);
+    setInbox(content);
   }
+  console.log(inbox);
 
-  const onSubmit = async (data) => {
-    console.log(content);
+  const onSubmit = async () => {
+    console.log(inbox);
     await sleep(200);
     await fetch("api/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ inbox: inbox }),
     }).then((res) => {
       console.log(res);
-      if (res.success === true) {
+      if (res.status === 200) {
         setShowEditor(false);
         setSendError("");
+        console.log(showEditor);
       }
       setSendError(res.message);
     });
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: `${!showEditor && "none"}`,
+      }}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl fullWidth variant="outlined">
+        {/* <FormControl fullWidth variant="outlined">
           <Box display={"flex"}>
             <InputLabel
               htmlFor="outlined-adornment-password"
@@ -91,7 +96,7 @@ export default function MailEditor({ showEditor, setShowEditor }) {
               color="inputColor"
               type="text"
               label="Send to"
-              // {...register("username")}
+              {...register("username")}
             />
             <Button
               color={"inputColor"}
@@ -106,7 +111,7 @@ export default function MailEditor({ showEditor, setShowEditor }) {
               Check
             </Button>
           </Box>
-        </FormControl>
+        </FormControl> */}
         <FormControl>
           <SunEditor
             id="mailContent"
@@ -171,8 +176,6 @@ export default function MailEditor({ showEditor, setShowEditor }) {
                 "Trebuchet MS",
               ],
             }}
-            defaultValue={content}
-            setContent={content}
             onChange={handleChange}
           />
         </FormControl>

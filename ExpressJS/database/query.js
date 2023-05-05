@@ -142,4 +142,39 @@ async function findDeletes(user) {
     return {success: false}
 }
 
-module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes }
+async function findOneMail(id) {
+    const mail = await prisma.mail.findUnique({
+        where: {
+            id: id
+        }
+    })
+    if(mail) return {success: true, mail: mail}
+
+    return {success: false}
+}
+
+async function findSocails(user) {
+    const socails = await prisma.mail.findUnique({
+        where: {
+            receivers: {hasEvery: [user]},
+            type: "Social Media"
+        }
+    })
+    if(socails) return {success: true, socails: socails}
+
+    return {success: false}
+}
+
+async function findAds(id) {
+    const ads = await prisma.mail.findUnique({
+        where: {
+            receivers: {hasEvery: [user]},
+            type: "Advertisment"
+        }
+    })
+    if(ads) return {success: true, ads: ads}
+
+    return {success: false}
+}
+
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds }

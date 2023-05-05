@@ -13,7 +13,6 @@ import LabelIcon from "@mui/icons-material/Label";
 import PeopleIcon from "@mui/icons-material/People";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import data from "./mailsExample.json";
 import Mail from "./Mail";
 
 function TabPanel(props) {
@@ -44,7 +43,7 @@ function a11yProps(index) {
   };
 }
 
-function Panel() {
+function Panel({ type, setType }) {
   const [panel, setPanel] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -78,7 +77,7 @@ function Panel() {
           <Tab
             icon={<InboxIcon />}
             iconPosition="start"
-            label="Main"
+            label="Primary"
             {...a11yProps(0)}
           />
           <Tab
@@ -95,14 +94,14 @@ function Panel() {
           />
         </Tabs>
       </Box>
-      <TabPanel value={"Main"} index={0}>
-        Main
+      <TabPanel value={"Primary"} index={0}>
+        Primary
       </TabPanel>
       <TabPanel value={"Socail Media"} index={1}>
-        Item Two
+        Socail Media
       </TabPanel>
       <TabPanel value={"Advertisment"} index={2}>
-        Item Three
+        Advertisment
       </TabPanel>
     </>
   );
@@ -121,7 +120,6 @@ export default function Postbox({ type, setType }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             user: localStorage.getItem("thisUsername"),
-            type: type,
           }),
         })
       ).json();
@@ -193,7 +191,7 @@ export default function Postbox({ type, setType }) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
-      <Panel />
+      <Panel type={type} setType={setType} />
       <Box
         flex={1}
         flexGrow={1}
@@ -213,6 +211,7 @@ export default function Postbox({ type, setType }) {
             return (
               <Mail
                 key={inbox.id}
+                id={inbox.id}
                 title={inbox.title}
                 content={inbox.content}
                 sender={inbox.sender}

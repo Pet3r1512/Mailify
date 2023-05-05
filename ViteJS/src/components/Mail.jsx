@@ -1,6 +1,7 @@
 import { CheckBox } from "@mui/icons-material";
 import { Box, Button, Checkbox, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function convertDate(date) {
   const currentDate = new Date().toISOString().substring(0, 10);
@@ -9,9 +10,18 @@ function convertDate(date) {
   } else return date;
 }
 
-export default function Mail({ sender, title, content, sentAt }) {
+export default function Mail({ sender, title, content, sentAt, id }) {
+  const navigate = useNavigate();
+
   return (
     <Button
+      onClick={() => {
+        navigate(`/mail/${id}`, {
+          state: {
+            id: id,
+          },
+        });
+      }}
       sx={{
         cursor: "pointer",
         borderRadius: "12px",

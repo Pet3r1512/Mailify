@@ -290,7 +290,19 @@ function Template({ children }) {
         anchor={"left"}
         onClose={() => setShowDrawer(false)}
       >
-        <DrawerSidebar openDrawer={open} setOpenDrawer={setOpen} />
+        <DrawerSidebar
+          openDrawer={open}
+          setOpenDrawer={setOpen}
+          type={type}
+          setType={setType}
+          showEditor={showEditor}
+          setShowEditor={setShowEditor}
+          setCurrentListItem={setCurrentListItem}
+          open={open}
+          setOpen={setOpen}
+          showDrawer={showDrawer}
+          setShowDrawer={setShowDrawer}
+        />
       </Drawer>
       <Box
         sx={{
@@ -353,7 +365,7 @@ function Template({ children }) {
               edge="start"
               color="inherit"
               onClick={() => {
-                setShowEditor(false);
+                setShowEditor(!showEditor);
               }}
               aria-label="close"
             >

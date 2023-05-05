@@ -10,7 +10,22 @@ import SettingsIcon from "@mui/icons-material/Settings";
 
 import { sideBarMainFunc, sideBarExpandFunc } from "./Sidebar";
 
-export default function DrawerSidebar({ currentListItem, setCurrentListItem }) {
+export default function DrawerSidebar({
+  currentListItem,
+  setCurrentListItem,
+  type,
+  setType,
+  open,
+  setOpen,
+  setShowEditor,
+  showEditor,
+  setShowDrawer,
+}) {
+  const handleClick = () => {
+    setShowDrawer(false);
+    setShowEditor(true);
+  };
+
   return (
     <div
       style={{ width: 250, padding: "10px 0 0 10px" }}
@@ -32,6 +47,7 @@ export default function DrawerSidebar({ currentListItem, setCurrentListItem }) {
           borderRadius: "12px",
           marginLeft: "auto",
         }}
+        onClick={handleClick}
       >
         New Mail
       </Button>
@@ -44,6 +60,7 @@ export default function DrawerSidebar({ currentListItem, setCurrentListItem }) {
         <ListItemButton
           onClick={() => {
             setCurrentListItem(item.text);
+            setType(item.url);
           }}
           key={item.text}
           sx={{
@@ -67,6 +84,7 @@ export default function DrawerSidebar({ currentListItem, setCurrentListItem }) {
         <ListItemButton
           onClick={() => {
             setCurrentListItem(item.text);
+            setType(item.url);
           }}
           key={item.text}
           sx={{

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes } = require('../database/query')
+const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds } = require('../database/query')
 const { findUsername } = require('../database/validate')
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -76,7 +76,7 @@ router.post('/important', async(req, res) => {
     return res.send({success: false, message: result.message})
 })
 
-router.post('/spamw', async(req, res) => {
+router.post('/spam', async(req, res) => {
     const user = req.body.user
     const result = await findSpams(user)
     if(result.success === true) {
@@ -92,6 +92,33 @@ router.post('/deleted', async(req, res) => {
         return res.status(200).send({mails: result.deletes})
     }
     return res.send({success: false, message: result.message})
+})
+
+// router.post('/socail', async(req, res) => {
+//     const user = req.body.user
+//     const result = await findSocails(user)
+//     if(result.success === true) {
+//         return res.status(200).send({mails: result.socails})
+//     }
+//     return res.send({success: false, message: result.message})
+// })
+
+// router.post('/ads', async(req, res) => {
+//     const user = req.body.user
+//     const result = await findAds(user)
+//     if(result.success === true) {
+//         return res.status(200).send({mails: result.ads})
+//     }
+//     return res.send({success: false, message: result.message})
+// })
+
+router.get('/mail/:id', async(req, res) => {
+    const id = req.params.id
+    const result = await findOneMail(id)
+    if(result.success === true) {
+        return res.status(200).send({mail: result.mail})
+    }
+    return res.send({success: false, message: "Mail does not existed"})
 })
 
 router.delete('/user/:id', (req, res) => {

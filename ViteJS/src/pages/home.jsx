@@ -1,5 +1,6 @@
 import React from "react";
-import { HeadBar, Tab } from "../components/index";
+import Tab from "../components/Tab";
+import HeadBar from "../components/HeadBar";
 
 function Hero() {
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Register from "../components/forms/_register";
-import { HeadBar, Tab } from "../components/index";
+import Tab from "../components/Tab";
 import { Link, Typography } from "@mui/material";
 import Loading from "./Loading";
 

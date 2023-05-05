@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Tab } from "../components";
-import { SignIn } from "../components/forms";
+import Tab from "../components/Tab";
+import SignIn from "../components/forms/_signin";
 import Loading from "./Loading";
 import { Link, Typography } from "@mui/material";
 

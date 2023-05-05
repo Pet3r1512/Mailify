@@ -1,5 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import { RegisterPage, SignInPage, Setting, Home, Inbox } from "../pages";
+import Home from "../pages/Home";
+import Setting from "../pages/Setting";
+import RegisterPage from "../pages/RegisterPage";
+import SignInPage from "../pages/SignInPage";
+import Inbox from "../pages/Inbox";
 import MailDetail from "../pages/MailDetail";
 
 const router = createBrowserRouter([

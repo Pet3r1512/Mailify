@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Box,
   List,
   ListItemText,
-  ListSubheader,
   ListItemButton,
   ListItemIcon,
   Collapse,

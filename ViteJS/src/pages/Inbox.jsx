@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 
 import { Box } from "@mui/material";
-import { Tab, Template } from "../components";
+import Tab from "../components/Tab";
+import Template from "../components/Template";
 import { useNavigate } from "react-router-dom";
 
 function Inbox() {

@@ -60,18 +60,86 @@ async function findUser(user) {
     
     else if(decryptingPassword(password, currentUser.password) && currentUser.username === username) 
         return {message: true, fullname: currentUser.fullname, username: currentUser.username}
+        else return {
+            message: false, error: "Incorrect password"
+        }
 }
 
-async function sendMail(content, sender, receivers) {
+async function sendMail(content, title, type, sender, receivers) {
     await prisma.mail.create({
         data: {
-            title: "content",
+            title: title,
             content: content,
             sender: sender,
+            type: type,
             receivers: receivers,
         }
     })
     return {message: true}
 }
 
-module.exports = { addUser, findUser, sendMail }
+async function findReceives(user) {
+    const inboxes = await prisma.mail.findMany({
+        where: {
+            receivers: {
+                hasEvery: [user]
+            }
+        }
+    })
+    if(inboxes) return {success: true, inboxes: inboxes}
+
+    return {success: false}
+}
+
+async function findSents(user) {
+    const sents = await prisma.mail.findMany({
+        where: {
+            sender: user
+        }
+    })
+    if(sents) return {success: true, sents: sents}
+
+    return {success: false}
+}
+
+async function findImportants(user) {
+    const importants = await prisma.mail.findMany({
+        where: {
+            sender: user, 
+            type: "Important"
+        }
+    })
+    if(importants) return {success: true, importants: importants}
+
+    return {success: false}
+}
+
+async function findSpams(user) {
+    const spams = await prisma.mail.findMany({
+        where: {
+            receivers: {
+                hasEvery: [user]
+            },
+            type: "Spam"
+        }
+    })
+    if(spams) return {success: true, spams: spams}
+
+    return {success: false}
+}
+
+async function findDeletes(user) {
+    const deletes = await prisma.mail.findMany({
+        where: {
+            receivers: {
+                hasEvery: [user]
+            },
+            type: "Deletes"
+        }
+    })
+    if(deletes) return {success: true, deletes: deletes}
+
+    return {success: false}
+}
+
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes }

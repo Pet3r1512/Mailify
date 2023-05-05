@@ -57,7 +57,7 @@ router.post('/inbox', async(req, res) => {
     }
     return res.send({success: false, message: result.message})
 })
-w
+
 router.post('/sent', async(req, res) => {
     const user = req.body.user
     const result = await findSents(user)

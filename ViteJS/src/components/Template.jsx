@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -13,15 +13,27 @@ import {
   Menu,
   MenuItem,
   Drawer,
+  Dialog,
+  Slide,
+  Typography,
+  Alert,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import Sidebar from "./Sidebar";
 import Postbox from "./Postbox";
 import DrawerSidebar from "./DrawerSidebar";
+
+import "suneditor/dist/css/suneditor.min.css";
+import MailEditor from "./MailEditor";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
@@ -222,6 +234,7 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
             onClick={() => {
               localStorage.removeItem("TOKEN");
               localStorage.removeItem("User");
+              localStorage.removeItem("thisUsername");
               navigate("/");
             }}
           >
@@ -238,6 +251,15 @@ function Template({ children }) {
   const [showDrawer, setShowDrawer] = useState(false);
   const [currentListItem, setCurrentListItem] = useState("Recieved");
   const [open, setOpen] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [type, setType] = useState("inbox");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setNotice("");
+    }, 2500);
+  }, [notice]);
 
   return (
     <Box
@@ -251,13 +273,9 @@ function Template({ children }) {
         },
         maxHeight: {
           xs: "90vh",
-          sm: "95vh",
-          lg: "unset",
+          sm: "100vh",
         },
-        overflow: {
-          xs: "hidden",
-          lg: "unset",
-        },
+        minHeight: "100%",
       }}
     >
       <Head
@@ -272,7 +290,19 @@ function Template({ children }) {
         anchor={"left"}
         onClose={() => setShowDrawer(false)}
       >
-        <DrawerSidebar openDrawer={open} setOpenDrawer={setOpen} />
+        <DrawerSidebar
+          openDrawer={open}
+          setOpenDrawer={setOpen}
+          type={type}
+          setType={setType}
+          showEditor={showEditor}
+          setShowEditor={setShowEditor}
+          setCurrentListItem={setCurrentListItem}
+          open={open}
+          setOpen={setOpen}
+          showDrawer={showDrawer}
+          setShowDrawer={setShowDrawer}
+        />
       </Drawer>
       <Box
         sx={{
@@ -280,7 +310,9 @@ function Template({ children }) {
             sm: "10px",
             lg: `20px 20px 20px ${!showSideBar ? "0" : "20px"}`,
           },
+          maxHeight: "100%",
         }}
+        flex={1}
         display={"flex"}
         gap={"8px"}
         overflow={"auto"}
@@ -292,9 +324,69 @@ function Template({ children }) {
           setShowSideBar={setShowSideBar}
           open={open}
           setOpen={setOpen}
+          showEditor={showEditor}
+          setShowEditor={setShowEditor}
+          type={type}
+          setType={setType}
         />
-        <Postbox />
+        <Postbox type={type} setType={setType} />
       </Box>
+      <Dialog
+        sx={{
+          height: "100%",
+        }}
+        open={showEditor}
+        onClose={() => {
+          setShowEditor(false);
+        }}
+        TransitionComponent={Transition}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginLeft: "10px",
+            borderRadius: "10px",
+          }}
+        >
+          <Typography
+            sx={{ cursor: "default" }}
+            variant="subtitle1"
+            color="initial"
+          >
+            New Mail
+          </Typography>
+          <Tooltip title="Close">
+            <IconButton
+              sx={{
+                marginLeft: "auto",
+              }}
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setShowEditor(!showEditor);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <MailEditor
+          showEditor={setShowEditor}
+          setShowEditor={setShowEditor}
+          notice={notice}
+          setNotice={setNotice}
+        />
+      </Dialog>
+      {notice === "" ? (
+        <></>
+      ) : notice === "Successful mailing" ? (
+        <Alert severity="success">Successful mailing</Alert>
+      ) : (
+        <Alert severity="error">Sending mail has failed</Alert>
+      )}
     </Box>
   );
 }

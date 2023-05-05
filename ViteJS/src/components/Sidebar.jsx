@@ -20,7 +20,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import MarkunreadMailboxIcon from "@mui/icons-material/MarkunreadMailbox";
 
-function SideBarList({ currentListItem, setCurrentListItem, open, setOpen }) {
+function SideBarList({
+  currentListItem,
+  setCurrentListItem,
+  open,
+  setOpen,
+  type,
+  setType,
+}) {
   const handleClick = () => {
     setOpen(!open);
   };
@@ -30,6 +37,7 @@ function SideBarList({ currentListItem, setCurrentListItem, open, setOpen }) {
       <ListItemButton
         onClick={() => {
           setCurrentListItem(item.text);
+          setType(item.url);
         }}
         key={item.text}
         sx={{
@@ -51,6 +59,7 @@ function SideBarList({ currentListItem, setCurrentListItem, open, setOpen }) {
       <ListItemButton
         onClick={() => {
           setCurrentListItem(item.text);
+          setType(item.url);
         }}
         sx={{
           pl: 4,
@@ -107,6 +116,10 @@ export default function Sidebar({
   setOpen,
   currentListItem,
   setCurrentListItem,
+  showEditor,
+  setShowEditor,
+  type,
+  setType,
 }) {
   return (
     <Box
@@ -126,13 +139,15 @@ export default function Sidebar({
         backgroundColor: "#d9d9d9",
       }}
     >
-      <NewMailButton />
+      <NewMailButton showEditor={showEditor} setShowEditor={setShowEditor} />
       <Box width={"100%"}>
         <SideBarList
           currentListItem={currentListItem}
           setCurrentListItem={setCurrentListItem}
           open={open}
           setOpen={setOpen}
+          type={type}
+          setType={setType}
         />
       </Box>
     </Box>
@@ -143,32 +158,39 @@ export const sideBarMainFunc = [
   {
     text: "Recieved",
     icon: <MarkunreadMailboxIcon />,
+    url: "inbox",
   },
   {
     text: "Sent",
     icon: <SendIcon />,
+    url: "sent",
   },
-  {
-    text: "Drafts",
-    icon: <DraftsIcon />,
-  },
-  {
-    text: "Starred",
-    icon: <StarBorder />,
-  },
+  // {
+  //   text: "Drafts",
+  //   icon: <DraftsIcon />,
+  //   url: "draft",
+  // },
+  // {
+  //   text: "Starred",
+  //   icon: <StarBorder />,
+  //   url: "starred",
+  // },
 ];
 
 export const sideBarExpandFunc = [
   {
     text: "Important",
     icon: <LabelImportantIcon />,
+    url: "important",
   },
   {
     text: "Spam",
     icon: <ReportGmailerrorredIcon />,
+    url: "spam",
   },
   {
     text: "Deleted",
     icon: <DeleteIcon />,
+    url: "deleted",
   },
 ];

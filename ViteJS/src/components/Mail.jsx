@@ -1,9 +1,27 @@
+import { CheckBox } from "@mui/icons-material";
 import { Box, Button, Checkbox, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function Mail() {
+function convertDate(date) {
+  const currentDate = new Date().toISOString().substring(0, 10);
+  if (date.substring(0, 10) === currentDate) {
+    return "Today";
+  } else return date;
+}
+
+export default function Mail({ sender, title, content, sentAt, id }) {
+  const navigate = useNavigate();
+
   return (
     <Button
+      onClick={() => {
+        navigate(`/mail/${id}`, {
+          state: {
+            id: id,
+          },
+        });
+      }}
       sx={{
         cursor: "pointer",
         borderRadius: "12px",
@@ -44,7 +62,7 @@ export default function Mail() {
           }}
           color="common.black"
         >
-          John at Taskade
+          {sender}
         </Typography>
         <Box
           sx={{
@@ -71,6 +89,7 @@ export default function Mail() {
           <Typography
             // width={"fit-content"}
             variant="caption"
+            noWrap
             color="common.black"
             sx={{
               flex: {
@@ -82,13 +101,14 @@ export default function Mail() {
                 xs: "100%",
                 lg: "fit-content",
               },
+              maxWidth: "250px",
               textAlign: {
                 xs: "left",
                 lg: "unset",
               },
             }}
           >
-            AI Chat, Schedule Templates, SAML & SCIM AI Chat
+            {title}
           </Typography>
           <Typography
             sx={{
@@ -106,13 +126,7 @@ export default function Mail() {
             color="initial"
             noWrap
           >
-            Hi Taskaders! 👋 We're thrilled to bring you another round of
-            exciting updates to speed up your workflow. Give it a spin and let
-            us know what you think! 🤖 💬 AI Chat is here! Upgrade your
-            productivity with our new AI Chat assistant that lives inside your
-            workspace dashboard. Generate task lists, mind maps, workflows, and
-            much more. AI Chat for teams is coming next to your project chats!
-            Learn more.
+            {content.replace(/<[^>]*>/g, "")}
           </Typography>
         </Box>
         <Typography
@@ -134,7 +148,7 @@ export default function Mail() {
           variant="body1"
           color="initial"
         >
-          Apr 13
+          {convertDate(sentAt)}
         </Typography>
       </Box>
     </Button>

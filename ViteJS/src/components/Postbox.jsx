@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Tabs, Tab, Tooltip, TablePagination } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Tooltip,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import InboxIcon from "@mui/icons-material/Inbox";
 import LabelIcon from "@mui/icons-material/Label";
 import PeopleIcon from "@mui/icons-material/People";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import data from "./mailsExample.json";
 import Mail from "./Mail";
 
 function TabPanel(props) {
@@ -37,7 +43,7 @@ function a11yProps(index) {
   };
 }
 
-function Panel() {
+function Panel({ type, setType }) {
   const [panel, setPanel] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -71,7 +77,7 @@ function Panel() {
           <Tab
             icon={<InboxIcon />}
             iconPosition="start"
-            label="Main"
+            label="Primary"
             {...a11yProps(0)}
           />
           <Tab
@@ -88,34 +94,51 @@ function Panel() {
           />
         </Tabs>
       </Box>
-      <TabPanel value={"Main"} index={0}>
-        Main
+      <TabPanel value={"Primary"} index={0}>
+        Primary
       </TabPanel>
       <TabPanel value={"Socail Media"} index={1}>
-        Item Two
+        Socail Media
       </TabPanel>
       <TabPanel value={"Advertisment"} index={2}>
-        Item Three
+        Advertisment
       </TabPanel>
     </>
   );
 }
 
-export default function Postbox({ children }) {
+export default function Postbox({ type, setType }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [mails, setMails] = useState([]);
 
-  let pageContent = data.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+  useEffect(() => {
+    const dataFetch = async () => {
+      const data = await (
+        await fetch(`api/${type}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user: localStorage.getItem("thisUsername"),
+          }),
+        })
+      ).json();
+      setMails(data.mails);
+    };
+    dataFetch();
+  }, [type]);
+
+  let pageContent = mails.slice(
+    mails.length * rowsPerPage,
+    mails.length * rowsPerPage + rowsPerPage
   );
 
   useEffect(() => {
-    pageContent = data.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
+    pageContent = mails.slice(
+      mails.length * rowsPerPage,
+      mails.length * rowsPerPage + rowsPerPage
     );
-  }, [page, rowsPerPage]);
+  }, [mails.length, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -142,6 +165,7 @@ export default function Postbox({ children }) {
       gap={"10px"}
       style={{
         backgroundColor: "#fff",
+        minHeight: "100%",
       }}
     >
       <Box
@@ -160,14 +184,14 @@ export default function Postbox({ children }) {
         <TablePagination
           rowsPerPageOptions={[]}
           component="div"
-          count={data.length}
+          count={mails.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
-      <Panel />
+      <Panel type={type} setType={setType} />
       <Box
         flex={1}
         flexGrow={1}
@@ -176,9 +200,26 @@ export default function Postbox({ children }) {
         gap={"5px"}
         flexDirection={"column"}
       >
-        {pageContent.map((index, item) => {
-          return <Mail key={index} />;
-        })}
+        {mails.length === 0 ? (
+          <Typography
+            sx={{ color: "#000", textAlign: "center", cursor: "default" }}
+          >
+            There is no mails
+          </Typography>
+        ) : (
+          mails?.map((inbox) => {
+            return (
+              <Mail
+                key={inbox.id}
+                id={inbox.id}
+                title={inbox.title}
+                content={inbox.content}
+                sender={inbox.sender}
+                sentAt={inbox.sentAt}
+              />
+            );
+          })
+        )}
       </Box>
     </Box>
   );

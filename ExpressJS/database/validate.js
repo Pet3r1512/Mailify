@@ -1,9 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
-const bcrypt = require('bcrypt')
 const prisma = new PrismaClient()
 
 const findUsername = async (username) => {
-    const currentUsername = prisma.user.findFirst({
+    const currentUsername = prisma.user.findUnique({
         where: {
             username: username
         }

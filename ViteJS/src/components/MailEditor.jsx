@@ -29,9 +29,18 @@ import {
   link,
 } from "suneditor/src/plugins";
 
-export default function MailEditor({ showEditor, setShowEditor }) {
+export default function MailEditor({
+  showEditor,
+  setShowEditor,
+  notice,
+  setNotice,
+}) {
   const [inbox, setInbox] = useState();
   const [sendError, setSendError] = useState("");
+  const [title, setTitle] = useState("");
+  const [receiverArr, setReceiverArr] = useState();
+
+  const receivers = [];
 
   const editor = useRef();
 
@@ -49,28 +58,32 @@ export default function MailEditor({ showEditor, setShowEditor }) {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function handleChange(content) {
-    console.log("OnChange: ", content);
     setInbox(content);
   }
-  console.log(inbox);
 
   const onSubmit = async () => {
-    console.log(inbox);
+    console.log(title, receiverArr);
     await sleep(200);
     await fetch("api/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ inbox: inbox }),
+      body: JSON.stringify({
+        inbox: inbox,
+        sender: localStorage.getItem("thisUsername"),
+        receivers: receiverArr,
+        title: title,
+      }),
     }).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         setShowEditor(false);
         setSendError("");
-        console.log(showEditor);
+        setNotice("Successful mailing");
+      } else {
+        setSendError(res.message);
+        setNotice("Sending mail has failed");
       }
-      setSendError(res.message);
     });
   };
 
@@ -81,7 +94,7 @@ export default function MailEditor({ showEditor, setShowEditor }) {
       }}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* <FormControl fullWidth variant="outlined">
+        <FormControl fullWidth variant="outlined">
           <Box display={"flex"}>
             <InputLabel
               htmlFor="outlined-adornment-password"
@@ -96,22 +109,56 @@ export default function MailEditor({ showEditor, setShowEditor }) {
               color="inputColor"
               type="text"
               label="Send to"
-              {...register("username")}
-            />
-            <Button
-              color={"inputColor"}
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                display: "flex",
-                alignItems: "center",
+              onBlur={(e) => {
+                e.target.value.split(",").forEach((item) => {
+                  receivers.push(item);
+                });
+                console.log(receivers);
+                setReceiverArr(receivers);
+                e.stopPropagation();
               }}
-              variant="contained"
-            >
-              Check
-            </Button>
+            />
           </Box>
-        </FormControl> */}
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#ffb703",
+              padding: "0 10px",
+              marginTop: "10px",
+            }}
+          >
+            When sending mail to more than one person, list the usernames
+            separated by commas. For example: JohnDoe,MartinScott
+          </Typography>
+        </FormControl>
+        <FormControl
+          sx={{
+            marginBlock: "10px",
+          }}
+          fullWidth
+          variant="outlined"
+        >
+          <Box display={"flex"}>
+            <InputLabel
+              htmlFor="outlined-adornment-password"
+              color="inputColor"
+            >
+              Title
+            </InputLabel>
+            <OutlinedInput
+              fullWidth
+              required
+              id="destinations"
+              color="inputColor"
+              type="text"
+              label="Send to"
+              onBlur={(e) => {
+                setTitle(e.target.value);
+                e.stopPropagation();
+              }}
+            />
+          </Box>
+        </FormControl>
         <FormControl>
           <SunEditor
             id="mailContent"

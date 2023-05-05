@@ -59,16 +59,16 @@ async function findUser(user) {
     if(currentUser === null)  return {message: false, error: "Invalid username or password"}
     
     else if(decryptingPassword(password, currentUser.password) && currentUser.username === username) 
-        return {message: true, fullname: currentUser.fullname}
+        return {message: true, fullname: currentUser.fullname, username: currentUser.username}
 }
 
-async function sendMail(content) {
+async function sendMail(content, sender, receivers) {
     await prisma.mail.create({
         data: {
             title: "content",
             content: content,
-            sender: "Thanh Phong",
-            receivers: {"name": "Thuy Vi"},
+            sender: sender,
+            receivers: receivers,
         }
     })
     return {message: true}

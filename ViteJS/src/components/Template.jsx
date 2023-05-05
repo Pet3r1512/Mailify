@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -16,6 +16,7 @@ import {
   Dialog,
   Slide,
   Typography,
+  Alert,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -233,6 +234,7 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
             onClick={() => {
               localStorage.removeItem("TOKEN");
               localStorage.removeItem("User");
+              localStorage.removeItem("thisUsername");
               navigate("/");
             }}
           >
@@ -250,12 +252,14 @@ function Template({ children }) {
   const [currentListItem, setCurrentListItem] = useState("Recieved");
   const [open, setOpen] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
-  const [rawText, setRawText] = useState("");
+  const [notice, setNotice] = useState("");
 
-  const handleChange = (rawDraftContentState) => {
-    // no need for convertToRaw or stateToHtml anymore
-    console.log(rawDraftContentState);
-  };
+  useEffect(() => {
+    console.log(notice);
+    setTimeout(() => {
+      setNotice("");
+    }, 2500);
+  }, [notice]);
 
   return (
     <Box
@@ -354,8 +358,20 @@ function Template({ children }) {
             </IconButton>
           </Tooltip>
         </Box>
-        <MailEditor showEditor={setShowEditor} setShowEditor={setShowEditor} />
+        <MailEditor
+          showEditor={setShowEditor}
+          setShowEditor={setShowEditor}
+          notice={notice}
+          setNotice={setNotice}
+        />
       </Dialog>
+      {notice === "" ? (
+        <></>
+      ) : notice === "Successful mailing" ? (
+        <Alert severity="success">Successful mailing</Alert>
+      ) : (
+        <Alert severity="error">Sending mail has failed</Alert>
+      )}
     </Box>
   );
 }

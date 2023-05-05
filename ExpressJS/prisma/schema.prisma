@@ -27,7 +27,7 @@ model Mail {
   content      String
   sentAt       DateTime     @default(now())
   sender       String
-  receivers    Json //contain a list of user's Id who receive this mail
+  receivers    String[] //contain a list of user's Id who receive this mail
   attachements Attachment[] @ignore
 
   @@unique([id, title])

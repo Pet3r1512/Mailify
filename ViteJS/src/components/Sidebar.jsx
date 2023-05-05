@@ -27,6 +27,8 @@ function SideBarList({
   setOpen,
   type,
   setType,
+  isLoading,
+  setIsLoading,
 }) {
   const handleClick = () => {
     setOpen(!open);
@@ -120,6 +122,8 @@ export default function Sidebar({
   setShowEditor,
   type,
   setType,
+  isLoading,
+  setIsLoading,
 }) {
   return (
     <Box
@@ -148,6 +152,8 @@ export default function Sidebar({
           setOpen={setOpen}
           type={type}
           setType={setType}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       </Box>
     </Box>

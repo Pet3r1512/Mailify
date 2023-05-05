@@ -9,6 +9,10 @@ import {
   InputLabel,
   OutlinedInput,
   Typography,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel,
+  Radio,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import {
@@ -39,6 +43,12 @@ export default function MailEditor({
   const [sendError, setSendError] = useState("");
   const [title, setTitle] = useState("");
   const [receiverArr, setReceiverArr] = useState();
+  const [type, setType] = useState("");
+
+  const changeType = (event) => {
+    console.log(event.target.value);
+    setType(event.target.value);
+  };
 
   const receivers = [];
 
@@ -62,7 +72,6 @@ export default function MailEditor({
   }
 
   const onSubmit = async () => {
-    console.log(title, receiverArr);
     await sleep(200);
     await fetch("api/send", {
       method: "POST",
@@ -74,6 +83,7 @@ export default function MailEditor({
         sender: localStorage.getItem("thisUsername"),
         receivers: receiverArr,
         title: title,
+        type: type,
       }),
     }).then((res) => {
       if (res.status === 200) {
@@ -113,7 +123,6 @@ export default function MailEditor({
                 e.target.value.split(",").forEach((item) => {
                   receivers.push(item);
                 });
-                console.log(receivers);
                 setReceiverArr(receivers);
                 e.stopPropagation();
               }}
@@ -151,13 +160,50 @@ export default function MailEditor({
               id="destinations"
               color="inputColor"
               type="text"
-              label="Send to"
+              label="Title"
               onBlur={(e) => {
                 setTitle(e.target.value);
                 e.stopPropagation();
               }}
             />
           </Box>
+        </FormControl>
+        <FormControl sx={{ padding: "0 10px" }}>
+          <FormLabel
+            id="demo-controlled-radio-buttons-group"
+            color={"inputColor"}
+          >
+            Type
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={type}
+            onChange={changeType}
+            sx={{
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+            }}
+          >
+            <FormControlLabel
+              value="Important"
+              control={<Radio />}
+              label="Important"
+            />
+            <FormControlLabel
+              value="Social Media"
+              control={<Radio />}
+              label="Social Media"
+            />
+            <FormControlLabel
+              value="Advertisments"
+              control={<Radio />}
+              label="Advertisments"
+            />
+          </RadioGroup>
         </FormControl>
         <FormControl>
           <SunEditor

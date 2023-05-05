@@ -253,9 +253,9 @@ function Template({ children }) {
   const [open, setOpen] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [notice, setNotice] = useState("");
+  const [type, setType] = useState("inbox");
 
   useEffect(() => {
-    console.log(notice);
     setTimeout(() => {
       setNotice("");
     }, 2500);
@@ -275,6 +275,7 @@ function Template({ children }) {
           xs: "90vh",
           sm: "100vh",
         },
+        minHeight: "100%",
       }}
     >
       <Head
@@ -313,8 +314,10 @@ function Template({ children }) {
           setOpen={setOpen}
           showEditor={showEditor}
           setShowEditor={setShowEditor}
+          type={type}
+          setType={setType}
         />
-        <Postbox />
+        <Postbox type={type} setType={setType} />
       </Box>
       <Dialog
         sx={{

@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Tabs, Tab, Tooltip, TablePagination } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Tooltip,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import InboxIcon from "@mui/icons-material/Inbox";
 import LabelIcon from "@mui/icons-material/Label";
 import PeopleIcon from "@mui/icons-material/People";
@@ -101,21 +108,39 @@ function Panel() {
   );
 }
 
-export default function Postbox({ children }) {
+export default function Postbox({ type, setType }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [mails, setMails] = useState([]);
 
-  let pageContent = data.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+  useEffect(() => {
+    const dataFetch = async () => {
+      const data = await (
+        await fetch(`api/${type}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user: localStorage.getItem("thisUsername"),
+            type: type,
+          }),
+        })
+      ).json();
+      setMails(data.mails);
+    };
+    dataFetch();
+  }, [type]);
+
+  let pageContent = mails.slice(
+    mails.length * rowsPerPage,
+    mails.length * rowsPerPage + rowsPerPage
   );
 
   useEffect(() => {
-    pageContent = data.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
+    pageContent = mails.slice(
+      mails.length * rowsPerPage,
+      mails.length * rowsPerPage + rowsPerPage
     );
-  }, [page, rowsPerPage]);
+  }, [mails.length, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -142,6 +167,7 @@ export default function Postbox({ children }) {
       gap={"10px"}
       style={{
         backgroundColor: "#fff",
+        minHeight: "100%",
       }}
     >
       <Box
@@ -160,7 +186,7 @@ export default function Postbox({ children }) {
         <TablePagination
           rowsPerPageOptions={[]}
           component="div"
-          count={data.length}
+          count={mails.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -176,9 +202,25 @@ export default function Postbox({ children }) {
         gap={"5px"}
         flexDirection={"column"}
       >
-        {pageContent.map((index, item) => {
-          return <Mail key={index} />;
-        })}
+        {mails.length === 0 ? (
+          <Typography
+            sx={{ color: "#000", textAlign: "center", cursor: "default" }}
+          >
+            There is no mails
+          </Typography>
+        ) : (
+          mails?.map((inbox) => {
+            return (
+              <Mail
+                key={inbox.id}
+                title={inbox.title}
+                content={inbox.content}
+                sender={inbox.sender}
+                sentAt={inbox.sentAt}
+              />
+            );
+          })
+        )}
       </Box>
     </Box>
   );

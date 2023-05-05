@@ -12,8 +12,8 @@
     "prisma": "^4.11.0"
   },
   "scripts": {
-    "start": "nodemon ./app.js",
-    "dev": "node ./app.js"
+    "dev": "nodemon ./app.js",
+    "start": "node ./app.js"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"

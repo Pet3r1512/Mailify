@@ -53,7 +53,7 @@ export default function Register() {
   const onSubmit = async (data) => {
     await sleep(200);
     setIsSubmit(true);
-    await fetch("https://mailify-server.onrender.com//register", {
+    await fetch("https://mailify-server.onrender.com/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

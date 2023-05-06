@@ -121,6 +121,10 @@ router.get('/mail/:id', async(req, res) => {
     return res.send({success: false, message: "Mail does not existed"})
 })
 
+router.get('/user/:username', async(req, res) => {
+    const username = req.params.username
+})
+
 router.delete('/user/:id', (req, res) => {
     return res.send('API ok')
 })

@@ -35,7 +35,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
+export function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -49,6 +49,12 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const goToProfilePage = () => {
+    navigate(`/user/profile`, {
+      state: { username: localStorage.getItem("thisUsername") },
+    });
   };
 
   return (
@@ -228,7 +234,7 @@ function Head({ showSideBar, setShowSideBar, setShowDrawer }) {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={goToProfilePage}>Profile</MenuItem>
           <MenuItem
             color="primary"
             onClick={() => {

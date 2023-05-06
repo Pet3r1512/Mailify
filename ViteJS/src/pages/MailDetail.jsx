@@ -1,20 +1,87 @@
 import React, { useEffect, useState } from "react";
-import { Box, Fab, Typography } from "@mui/material";
+import { Box, Fab, Typography, Alert, Tooltip, Button } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import DeleteIcon from "@mui/icons-material/Delete";
 import StarIcon from "@mui/icons-material/Star";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function MailDetail() {
   const [data, setData] = useState({});
+  const [alert, setAlert] = useState("");
   const { state } = useLocation();
 
-  const handleDelete = () => {};
+  const navigate = useNavigate();
 
-  const handleSpam = () => {};
+  const handleDelete = () => {
+    const dataFetch = async () => {
+      const data = (
+        await fetch(`http://localhost:8080/api/mail/delete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mailId: state.id,
+          }),
+        })
+      )
+        .json()
+        .then((res) => {
+          if (res.success === true) {
+            setAlert("Deleted Successfully");
+          } else {
+            setAlert("Something goes wrong!");
+          }
+        });
+    };
+    dataFetch();
+  };
 
-  const handleStar = () => {};
+  const handleSpam = () => {
+    const dataFetch = async () => {
+      const data = (
+        await fetch(`http://localhost:8080/api/mail/spam`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mailId: state.id,
+          }),
+        })
+      )
+        .json()
+        .then((res) => {
+          if (res.success === true) {
+            setAlert("Moved to spam successfully");
+          } else {
+            setAlert("Something goes wrong!");
+          }
+        });
+    };
+    dataFetch();
+  };
+
+  const handleStar = () => {
+    const dataFetch = async () => {
+      const data = (
+        await fetch(`http://localhost:8080/api/mail/star`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mailId: state.id,
+          }),
+        })
+      )
+        .json()
+        .then((res) => {
+          if (res.success === true) {
+            setAlert("Starred Successfully");
+          } else {
+            setAlert("Something goes wrong!");
+          }
+        });
+    };
+    dataFetch();
+  };
 
   useEffect(() => {
     const dataFetch = async () => {
@@ -33,6 +100,12 @@ export default function MailDetail() {
     };
     dataFetch();
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAlert("");
+    }, 3500);
+  }, [alert]);
 
   return (
     <Box
@@ -55,6 +128,22 @@ export default function MailDetail() {
         },
       }}
     >
+      <Tooltip title="Back To Inbox">
+        <Button
+          sx={{
+            width: "fit-content",
+            position: "absolute",
+            top: "20px",
+            left: "20px",
+          }}
+          variant="contained"
+          onClick={() => {
+            navigate("/inbox");
+          }}
+        >
+          Back
+        </Button>
+      </Tooltip>
       <Box
         sx={{
           display: "flex",
@@ -97,6 +186,28 @@ export default function MailDetail() {
         </Typography>
         <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
       </Box>
+      {alert === "" ? (
+        <></>
+      ) : (
+        <Box>
+          {alert === "Something goes wrong!" ? (
+            <Alert severity="error">Something goes wrong!</Alert>
+          ) : (
+            <Alert
+              sx={{
+                position: "absolute",
+                bottom: {
+                  xs: "10px",
+                  md: 0,
+                },
+              }}
+              severity="success"
+            >
+              {alert}
+            </Alert>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

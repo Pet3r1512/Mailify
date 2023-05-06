@@ -6,6 +6,8 @@ function convertDate(date) {
   const currentDate = new Date().toISOString().substring(0, 10);
   if (date.substring(0, 10) === currentDate) {
     return "Today";
+  } else if (date.substring(0, 4) === currentDate.substring(0, 4)) {
+    return date.substring(5, 10);
   } else return date.substring(0, 10);
 }
 

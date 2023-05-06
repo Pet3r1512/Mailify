@@ -83,7 +83,8 @@ async function findReceives(user) {
         where: {
             receivers: {
                 hasEvery: [user]
-            }
+            },
+            isDeleted: false
         }
     })
     if(inboxes) return {success: true, inboxes: inboxes}
@@ -120,7 +121,7 @@ async function findSpams(user) {
             receivers: {
                 hasEvery: [user]
             },
-            type: "Spam"
+            isSpam: true
         }
     })
     if(spams) return {success: true, spams: spams}
@@ -134,10 +135,24 @@ async function findDeletes(user) {
             receivers: {
                 hasEvery: [user]
             },
-            type: "Deletes"
+            isDeleted: true
         }
     })
     if(deletes) return {success: true, deletes: deletes}
+
+    return {success: false}
+}
+
+async function findStars(user) {
+    const stars = await prisma.mail.findMany({
+        where: {
+            receivers: {
+                hasEvery: [user]
+            },
+            isStarred: true
+        }
+    })
+    if(stars) return {success: true, stars: stars}
 
     return {success: false}
 }
@@ -188,4 +203,48 @@ async function findUserProfile(username) {
     return {success: false}
 }
 
-module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile }
+async function updateDelete(id) {
+    const updatedMail = await prisma.mail.update({
+        where: {
+            id: id
+        },
+        data: {
+            isDeleted: true
+        }
+    })
+    if(updateDelete) return {success: true}
+
+    return {success: false}
+}
+
+async function updateSpam(id) {
+    const spamedMail = await prisma.mail.update({
+        where: {
+            id: id
+        },
+        data: {
+            isSpam: true
+        }
+    })
+    if(spamedMail) return {success: true}
+
+    return {success: false}
+}
+
+async function updateStar(user) {
+    const starredMail = await prisma.mail.update({
+        where: {
+            receivers: {
+                hasEvery: [user]
+            }
+        },
+        data: {
+            isStarred: true
+        }
+    })
+    if(starredMail) return {success: true}
+
+    return {success: false}
+}
+
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findStars, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile, updateDelete, updateSpam, updateStar }

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile } = require('../database/query')
+const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findStars, findDeletes, findOneMail, findSocails, findAds, findUserProfile, updateDelete, updateSpam, updateStar } = require('../database/query')
 const { findUsername } = require('../database/validate')
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -94,6 +94,16 @@ router.post('/deleted', async(req, res) => {
     return res.send({success: false, message: result.message})
 })
 
+router.post('/starred', async(req, res) => {
+    const user = req.body.user
+    console.log(user)
+    const result = await findStars(user)
+    if(result.success === true) {
+        return res.status(200).send({mails: result.stars})
+    }
+    return res.send({success: false, message: result.message})
+})
+
 // router.post('/socail', async(req, res) => {
 //     const user = req.body.user
 //     const result = await findSocails(user)
@@ -126,6 +136,33 @@ router.get('/user/:username', async(req, res) => {
     const result = await findUserProfile(username)
     if(result.success === true) {
         return res.status(200).send({user: result.user})
+    }
+    return res.send({success: false})
+})
+
+router.post('/mail/delete', async(req, res) => {
+    const id = req.body.mailId
+    const result = await updateDelete(id)
+    if(result.success === true) {
+        return res.status(200).send({success: true})
+    }
+    return res.send({success: false})
+})
+
+router.post('/mail/spam', async(req, res) => {
+    const id = req.body.mailId
+    const result = await updateSpam(id)
+    if(result.success === true) {
+        return res.status(200).send({success: true})
+    }
+    return res.send({success: false})
+})
+
+router.post('/mail/star', async(req, res) => {
+    const id = req.body.mailId
+    const result = await updateStar(id)
+    if(result.success === true) {
+        return res.status(200).send({success: true})
     }
     return res.send({success: false})
 })

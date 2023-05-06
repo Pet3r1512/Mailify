@@ -126,7 +126,6 @@ export default function Postbox({ type, setType }) {
           }),
         })
       ).json();
-      console.log(data)
       setMails(data.mails);
       setIsLoading(false);
     };
@@ -198,7 +197,9 @@ export default function Postbox({ type, setType }) {
       </Box>
       <Panel type={type} setType={setType} />
       {isLoading ? (
-        <CircularProgress>Fetching data...</CircularProgress>
+        <CircularProgress sx={{ alignSelf: "center" }}>
+          Fetching data...
+        </CircularProgress>
       ) : (
         <Box
           flex={1}

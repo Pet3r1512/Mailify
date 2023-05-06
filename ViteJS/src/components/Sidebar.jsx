@@ -175,11 +175,11 @@ export const sideBarMainFunc = [
   //   icon: <DraftsIcon />,
   //   url: "draft",
   // },
-  // {
-  //   text: "Starred",
-  //   icon: <StarBorder />,
-  //   url: "starred",
-  // },
+  {
+    text: "Starred",
+    icon: <StarBorder />,
+    url: "starred",
+  },
 ];
 
 export const sideBarExpandFunc = [

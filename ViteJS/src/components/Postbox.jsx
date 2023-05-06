@@ -7,6 +7,7 @@ import {
   Tooltip,
   TablePagination,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import InboxIcon from "@mui/icons-material/Inbox";
 import LabelIcon from "@mui/icons-material/Label";
@@ -111,11 +112,13 @@ export default function Postbox({ type, setType }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
   const [mails, setMails] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     const dataFetch = async () => {
       const data = await (
-        await fetch(`api/${type}`, {
+        await fetch(`https://mailify-server.onrender.com/api/${type}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -124,6 +127,7 @@ export default function Postbox({ type, setType }) {
         })
       ).json();
       setMails(data.mails);
+      setIsLoading(false);
     };
     dataFetch();
   }, [type]);
@@ -192,35 +196,39 @@ export default function Postbox({ type, setType }) {
         />
       </Box>
       <Panel type={type} setType={setType} />
-      <Box
-        flex={1}
-        flexGrow={1}
-        overflow={"auto"}
-        display={"flex"}
-        gap={"5px"}
-        flexDirection={"column"}
-      >
-        {mails.length === 0 ? (
-          <Typography
-            sx={{ color: "#000", textAlign: "center", cursor: "default" }}
-          >
-            There is no mails
-          </Typography>
-        ) : (
-          mails?.map((inbox) => {
-            return (
-              <Mail
-                key={inbox.id}
-                id={inbox.id}
-                title={inbox.title}
-                content={inbox.content}
-                sender={inbox.sender}
-                sentAt={inbox.sentAt}
-              />
-            );
-          })
-        )}
-      </Box>
+      {isLoading ? (
+        <CircularProgress>Fetching data...</CircularProgress>
+      ) : (
+        <Box
+          flex={1}
+          flexGrow={1}
+          overflow={"auto"}
+          display={"flex"}
+          gap={"5px"}
+          flexDirection={"column"}
+        >
+          {mails.length === 0 ? (
+            <Typography
+              sx={{ color: "#000", textAlign: "center", cursor: "default" }}
+            >
+              There is no mails
+            </Typography>
+          ) : (
+            mails?.map((inbox) => {
+              return (
+                <Mail
+                  key={inbox.id}
+                  id={inbox.id}
+                  title={inbox.title}
+                  content={inbox.content}
+                  sender={inbox.sender}
+                  sentAt={inbox.sentAt}
+                />
+              );
+            })
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

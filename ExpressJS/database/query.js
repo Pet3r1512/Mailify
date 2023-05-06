@@ -177,4 +177,15 @@ async function findAds(id) {
     return {success: false}
 }
 
-module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds }
+async function findUserProfile(username) {
+    const user = await prisma.user.findFirst({
+        where: {
+            username: username
+        }
+    })
+    if(user) return {success: true, user: user}
+
+    return {success: false}
+}
+
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile }

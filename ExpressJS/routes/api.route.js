@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds } = require('../database/query')
+const { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile } = require('../database/query')
 const { findUsername } = require('../database/validate')
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -123,6 +123,11 @@ router.get('/mail/:id', async(req, res) => {
 
 router.get('/user/:username', async(req, res) => {
     const username = req.params.username
+    const result = await findUserProfile(username)
+    if(result.success === true) {
+        return res.status(200).send({user: result.user})
+    }
+    return res.send({success: false})
 })
 
 router.delete('/user/:id', (req, res) => {

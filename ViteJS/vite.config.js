@@ -6,8 +6,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://mailify-server.onrender.com/',
+        target: 'http://localhost:8080/',
       },
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
+    },
+  },
 });

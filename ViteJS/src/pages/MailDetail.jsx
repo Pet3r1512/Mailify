@@ -169,13 +169,19 @@ export default function MailDetail() {
             gap: "10px",
           }}
         >
-          <Fab onClick={handleDelete}>
+          <Fab
+          // onClick={handleDelete}
+          >
             <DeleteIcon />
           </Fab>
-          <Fab onClick={handleSpam}>
+          <Fab
+          // onClick={handleSpam}
+          >
             <ReportIcon />
           </Fab>
-          <Fab onClick={handleStar}>
+          <Fab
+          //  onClick={handleStar}
+          >
             <StarOutlineIcon />
           </Fab>
         </Box>

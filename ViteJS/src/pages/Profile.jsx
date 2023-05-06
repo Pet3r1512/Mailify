@@ -29,9 +29,12 @@ export default function Profile() {
   useEffect(() => {
     const dataFetch = async () => {
       const data = (
-        await fetch(`http://localhost:8080/api/user/${state.state.username}`, {
-          method: "GET",
-        })
+        await fetch(
+          `https://mailify-server.onrender.com/api/user/${state.state.username}`,
+          {
+            method: "GET",
+          }
+        )
       )
         .json()
         .then((res) => {

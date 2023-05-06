@@ -17,7 +17,7 @@ export default function MailDetail() {
   const handleDelete = () => {
     const dataFetch = async () => {
       const data = (
-        await fetch(`http://localhost:8080/api/mail/delete`, {
+        await fetch(`https://mailify-server.onrender.com/api/mail/delete`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -40,7 +40,7 @@ export default function MailDetail() {
   const handleSpam = () => {
     const dataFetch = async () => {
       const data = (
-        await fetch(`http://localhost:8080/api/mail/spam`, {
+        await fetch(`https://mailify-server.onrender.com/api/mail/spam`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -63,7 +63,7 @@ export default function MailDetail() {
   const handleStar = () => {
     const dataFetch = async () => {
       const data = (
-        await fetch(`http://localhost:8080/api/mail/star`, {
+        await fetch(`https://mailify-server.onrender.com/api/mail/star`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

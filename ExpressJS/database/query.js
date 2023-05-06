@@ -204,7 +204,7 @@ async function findUserProfile(username) {
 }
 
 async function updateDelete(id) {
-    const updatedMail = await prisma.mail.update({
+    const updateDelete = await prisma.mail.update({
         where: {
             id: id
         },

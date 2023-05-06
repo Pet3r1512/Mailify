@@ -9,9 +9,12 @@ export default function MailDetail() {
   useEffect(() => {
     const dataFetch = async () => {
       const data = (
-        await fetch(`/api/mail/${state.id}`, {
-          method: "GET",
-        })
+        await fetch(
+          `https://mailify-server.onrender.com/api/mail/${state.id}`,
+          {
+            method: "GET",
+          }
+        )
       )
         .json()
         .then((res) => {

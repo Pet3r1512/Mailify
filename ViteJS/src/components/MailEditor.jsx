@@ -73,7 +73,7 @@ export default function MailEditor({
 
   const onSubmit = async () => {
     await sleep(200);
-    await fetch("api/send", {
+    await fetch("https://mailify-server.onrender.com/api/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

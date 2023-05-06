@@ -6,7 +6,7 @@ function convertDate(date) {
   const currentDate = new Date().toISOString().substring(0, 10);
   if (date.substring(0, 10) === currentDate) {
     return "Today";
-  } else return date;
+  } else return date.substring(0, 10);
 }
 
 export default function Mail({ sender, title, content, sentAt, id }) {

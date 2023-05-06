@@ -28,9 +28,6 @@ model Mail {
   sentAt       DateTime     @default(now())
   sender       String
   type         String //Important, Spam, Deleted
-  isDeleted    Boolean?
-  isSpam       Boolean?
-  isStarred    Boolean?
   receivers    String[] //contain a list of user's Id who receive this mail
   attachements Attachment[] @ignore
 

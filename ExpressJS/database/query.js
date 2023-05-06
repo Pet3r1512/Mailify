@@ -83,8 +83,7 @@ async function findReceives(user) {
         where: {
             receivers: {
                 hasEvery: [user]
-            },
-            isDeleted: false
+            }
         }
     })
     if(inboxes) return {success: true, inboxes: inboxes}
@@ -129,19 +128,6 @@ async function findSpams(user) {
     return {success: false}
 }
 
-async function findDeletes(user) {
-    const deletes = await prisma.mail.findMany({
-        where: {
-            receivers: {
-                hasEvery: [user]
-            },
-            isDeleted: true
-        }
-    })
-    if(deletes) return {success: true, deletes: deletes}
-
-    return {success: false}
-}
 
 async function findStars(user) {
     const stars = await prisma.mail.findMany({

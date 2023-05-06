@@ -76,52 +76,6 @@ router.post('/important', async(req, res) => {
     return res.send({success: false, message: result.message})
 })
 
-router.post('/spam', async(req, res) => {
-    const user = req.body.user
-    const result = await findSpams(user)
-    if(result.success === true) {
-        return res.status(200).send({mails: result.spams})
-    }
-    return res.send({success: false, message: result.message})
-})
-
-router.post('/deleted', async(req, res) => {
-    const user = req.body.user
-    const result = await findDeletes(user)
-    if(result.success === true) {
-        return res.status(200).send({mails: result.deletes})
-    }
-    return res.send({success: false, message: result.message})
-})
-
-router.post('/starred', async(req, res) => {
-    const user = req.body.user
-    console.log(user)
-    const result = await findStars(user)
-    if(result.success === true) {
-        return res.status(200).send({mails: result.stars})
-    }
-    return res.send({success: false, message: result.message})
-})
-
-// router.post('/socail', async(req, res) => {
-//     const user = req.body.user
-//     const result = await findSocails(user)
-//     if(result.success === true) {
-//         return res.status(200).send({mails: result.socails})
-//     }
-//     return res.send({success: false, message: result.message})
-// })
-
-// router.post('/ads', async(req, res) => {
-//     const user = req.body.user
-//     const result = await findAds(user)
-//     if(result.success === true) {
-//         return res.status(200).send({mails: result.ads})
-//     }
-//     return res.send({success: false, message: result.message})
-// })
-
 router.get('/mail/:id', async(req, res) => {
     const id = req.params.id
     const result = await findOneMail(id)

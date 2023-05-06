@@ -129,19 +129,6 @@ async function findSpams(user) {
 }
 
 
-async function findStars(user) {
-    const stars = await prisma.mail.findMany({
-        where: {
-            receivers: {
-                hasEvery: [user]
-            },
-            isStarred: true
-        }
-    })
-    if(stars) return {success: true, stars: stars}
-
-    return {success: false}
-}
 
 async function findOneMail(id) {
     const mail = await prisma.mail.findUnique({
@@ -189,4 +176,4 @@ async function findUserProfile(username) {
     return {success: false}
 }
 
-module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findStars, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile }
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findSpams, findOneMail, findSocails, findAds, findUserProfile }

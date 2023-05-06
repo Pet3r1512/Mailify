@@ -123,6 +123,7 @@ export default function Postbox({ type, setType }) {
           }),
         })
       ).json();
+      console.log(data)
       setMails(data.mails);
     };
     dataFetch();

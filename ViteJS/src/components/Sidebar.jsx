@@ -170,16 +170,6 @@ export const sideBarMainFunc = [
     icon: <SendIcon />,
     url: "sent",
   },
-  // {
-  //   text: "Drafts",
-  //   icon: <DraftsIcon />,
-  //   url: "draft",
-  // },
-  {
-    // text: "Starred",
-    // icon: <StarBorder />,
-    // url: "starred",
-  },
 ];
 
 export const sideBarExpandFunc = [

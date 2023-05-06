@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Fab, Typography } from "@mui/material";
+import ReportIcon from "@mui/icons-material/Report";
+import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { useLocation } from "react-router-dom";
 
 export default function MailDetail() {
   const [data, setData] = useState({});
   const { state } = useLocation();
+
+  const handleDelete = () => {};
+
+  const handleSpam = () => {};
+
+  const handleStar = () => {};
 
   useEffect(() => {
     const dataFetch = async () => {
@@ -45,16 +55,41 @@ export default function MailDetail() {
         },
       }}
     >
-      <Box sx={{ marginLeft: "20px", cursor: "default" }}>
-        <Typography variant="h6" color="initial">
-          From: {data.sender}
-        </Typography>
-        <Typography variant="h6" color="initial">
-          To:{" "}
-          {data.receivers?.map((item) => {
-            return item;
-          })}
-        </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginInline: "20px",
+        }}
+      >
+        <Box sx={{ cursor: "default" }}>
+          <Typography variant="h6" color="initial">
+            From: {data.sender}
+          </Typography>
+          <Typography variant="h6" color="initial">
+            To:{" "}
+            {data.receivers?.map((item) => {
+              return item;
+            })}
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "10px",
+          }}
+        >
+          <Fab onClick={handleDelete}>
+            <DeleteIcon />
+          </Fab>
+          <Fab onClick={handleSpam}>
+            <ReportIcon />
+          </Fab>
+          <Fab onClick={handleStar}>
+            <StarOutlineIcon />
+          </Fab>
+        </Box>
       </Box>
       <Box sx={{ alignSelf: "center" }}>
         <Typography variant="h3" color="initial" textAlign={"center"}>

@@ -140,33 +140,6 @@ router.get('/user/:username', async(req, res) => {
     return res.send({success: false})
 })
 
-// router.post('/mail/delete', async(req, res) => {
-//     const id = req.body.mailId
-//     const result = await updateDelete(id)
-//     if(result.success === true) {
-//         return res.status(200).send({success: true})
-//     }
-//     return res.send({success: false})
-// })
-
-// router.post('/mail/spam', async(req, res) => {
-//     const id = req.body.mailId
-//     const result = await updateSpam(id)
-//     if(result.success === true) {
-//         return res.status(200).send({success: true})
-//     }
-//     return res.send({success: false})
-// })
-
-// router.post('/mail/star', async(req, res) => {
-//     const id = req.body.mailId
-//     const result = await updateStar(id)
-//     if(result.success === true) {
-//         return res.status(200).send({success: true})
-//     }
-//     return res.send({success: false})
-// })
-
 router.delete('/user/:id', (req, res) => {
     return res.send('API ok')
 })

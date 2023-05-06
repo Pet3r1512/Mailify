@@ -203,48 +203,4 @@ async function findUserProfile(username) {
     return {success: false}
 }
 
-async function updateDelete(id) {
-    const updateDelete = await prisma.mail.update({
-        where: {
-            id: id
-        },
-        data: {
-            isDeleted: true
-        }
-    })
-    if(updateDelete) return {success: true}
-
-    return {success: false}
-}
-
-async function updateSpam(id) {
-    const spamedMail = await prisma.mail.update({
-        where: {
-            id: id
-        },
-        data: {
-            isSpam: true
-        }
-    })
-    if(spamedMail) return {success: true}
-
-    return {success: false}
-}
-
-async function updateStar(user) {
-    const starredMail = await prisma.mail.update({
-        where: {
-            receivers: {
-                hasEvery: [user]
-            }
-        },
-        data: {
-            isStarred: true
-        }
-    })
-    if(starredMail) return {success: true}
-
-    return {success: false}
-}
-
-module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findStars, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile, updateDelete, updateSpam, updateStar }
+module.exports = { addUser, findUser, sendMail, findReceives, findSents, findImportants, findStars, findSpams, findDeletes, findOneMail, findSocails, findAds, findUserProfile }

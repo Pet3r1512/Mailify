@@ -115,7 +115,7 @@ export default function Postbox({ type, setType }) {
   useEffect(() => {
     const dataFetch = async () => {
       const data = await (
-        await fetch(`api/${type}`, {
+        await fetch(`https://mailify-server.onrender.com/api/${type}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

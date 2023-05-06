@@ -176,9 +176,9 @@ export const sideBarMainFunc = [
   //   url: "draft",
   // },
   {
-    text: "Starred",
-    icon: <StarBorder />,
-    url: "starred",
+    // text: "Starred",
+    // icon: <StarBorder />,
+    // url: "starred",
   },
 ];
 

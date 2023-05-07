@@ -114,7 +114,7 @@ export default function MailDetail() {
         justifyContent: "center",
         flexDirection: "column",
         color: "#000",
-        height: {
+        minHeight: {
           xs: "auto",
           md: "100vh",
         },
